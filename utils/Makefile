@@ -8,7 +8,7 @@ endif
 
 #compilers
 ifdef CILK
-PCC = g++
+PCC = ./setup.sh clang++
 PCFLAGS = -std=c++14 -fcilkplus -lcilkrts -O3 -DCILK $(INTT) $(INTE)
 PLFLAGS = -fcilkplus -lcilkrts
 
