@@ -22,25 +22,43 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "ligra.h"
-//#include "Eigen/Dense"
+
 #include <adept_source.h>
 #include <adept_arrays.h>
+#include <random>
+#include <vector>
+#include <map>
 #include <cilk/reducer.h>
 #include <cilk/reducer_opadd.h>
 
-//int sched_yield(void) { for (int i=0; i< 4000; i++) _mm_pause(); return 0;}
-
 using adept::Matrix;
 using adept::Real;
+
+#include "parse_pubmed.cpp"
 
 double PARAM_ADAM_B1 = 0.9;
 double PARAM_ADAM_B2 = 0.999;
 double PARAM_ADAM_EPSILON = 1e-8;
 
+
+
+/*
+	Utility Functions
+*/
+
 void zero_init(Matrix& mat) {
   for (int i = 0; i < mat.dimensions()[0]; i++) {
     for (int j = 0; j < mat.dimensions()[1]; j++) {
       mat(i,j) = 0.0;
+    }
+  }
+}
+
+void random_init(std::default_random_engine& gen, Matrix& mat) {
+  std::uniform_real_distribution<double> distribution(0.0, 1.0/(mat.dimensions()[0]*mat.dimensions()[1]));
+  for (int i = 0; i < mat.dimensions()[0]; i++) {
+    for (int j = 0; j < mat.dimensions()[1]; j++) {
+      mat(i,j) = distribution(gen);
     }
   }
 }
@@ -70,28 +88,97 @@ void apply_gradient_update_ADAM(std::vector<Matrix>& weights, std::vector<Matrix
   }
 }
 
+/*
+	Gradient table reducer
+*/
+
+#include "gradient_table_reducer.cpp"
 
 
+/*
+	Functions/Operations plus functions to propagate their adjoints backwards.
+*/
 
-#include "parse_pubmed.cpp"
+void softmax(Matrix& input, Matrix& output) {
+  // max val divided out for numerical stability
+  Real mval = maxval(input);
+  output = exp(input-mval)/sum(exp(input-mval));
+}
 
-#include <random>
-#include <vector>
-#include <map>
-#include "plad_reducer.cpp"
+void d_softmax(Matrix& input, Matrix& d_input, Matrix& output, Matrix& d_output) {
+  d_input = -1.0*output * sum(d_output*output) + output*d_output;
+  zero_init(d_output);
+}
 
-struct BFS_F {
+void crossentropy(Matrix& yhat, Matrix& y, double& output) {
+  double loss_sum = 0.0;
+  double n = y.dimensions()[0]*y.dimensions()[1];
+  for (int i = 0; i < y.dimensions()[0]; i++) {
+    for (int j = 0; j < y.dimensions()[1]; j++) {
+      loss_sum += -1.0 * y(i,j)*log(yhat(i,j) + 1e-12) - (1.0-y(i,j))*log(1-yhat(i,j) + 1e-12);
+    }
+  }
+  output = loss_sum / n;
+}
+
+void d_crossentropy(Matrix& yhat, Matrix& d_yhat, Matrix& y, double& d_output) {
+   double n = y.dimensions()[0]*y.dimensions()[1];
+   for (int i = 0; i < y.dimensions()[0]; i++) {
+    for (int j = 0; j < y.dimensions()[1]; j++) {
+      d_yhat(i,j) = d_output*(-1.0 * y(i,j) / (yhat(i,j) + 1e-12) + (1.0-y(i,j))*1.0/(1-yhat(i,j)+1e-12)) * (1.0/n);
+    }
+  }
+}
+
+void sqloss(Matrix& input1, Matrix& input2, double& output) {
+  Matrix diff = input1-input2;
+  output = sum(diff*diff);
+}
+
+void d_sqloss(Matrix& input1, Matrix& d_input1, Matrix& input2,
+              double& d_output) {
+  d_input1 = 2*(input1-input2) * d_output;
+  d_output = 0.0;
+}
+
+
+template <class vertex>
+struct GCN_F {
+
+  graph<vertex>& GA;
+
   uintE* Parents;
-  BFS_F(uintE* _Parents) : Parents(_Parents) {}
-  inline bool update (uintE s, uintE d) { //Update
-    if(Parents[d] == UINT_E_MAX) { Parents[d] = s; return 1; }
-    else return 0;
+  Matrix& weights;
+  Matrix& skip_weights;
+  Matrix* next_vertex_embeddings;
+  Matrix* prev_vertex_embeddings;
+  bool first;
+  GCN_F(uintE* _Parents, graph<vertex>& _GA,
+        Matrix& _weights, Matrix& _skip_weights, Matrix* _next_vertex_embeddings,
+        Matrix* _prev_vertex_embeddings, bool _first) : Parents(_Parents), GA(_GA), weights(_weights), skip_weights(_skip_weights),
+                                          next_vertex_embeddings(_next_vertex_embeddings),
+                                          prev_vertex_embeddings(_prev_vertex_embeddings), first(_first) {}
+
+  inline bool operator() (uintE v) {
+    uintE* neighbors = reinterpret_cast<uintE*>(GA.V[v].getOutNeighbors());
+    int in_degree = GA.V[v].getOutDegree();
+
+    // self edge
+    {
+      uintE n = v;
+      next_vertex_embeddings[v] = (skip_weights ** prev_vertex_embeddings[n]);
+    }
+
+    if (!first) {
+      for (int i = 0; i < in_degree; i++) {
+        uintE n = neighbors[i];
+        double edge_weight = 1.0/sqrt(in_degree + GA.V[n].getOutDegree());
+        next_vertex_embeddings[v] += (weights ** prev_vertex_embeddings[n]) * edge_weight;
+      }
+      next_vertex_embeddings[v] = fmax(0.0, next_vertex_embeddings[v]);
+    }
+    return 1;
   }
-  inline bool updateAtomic (uintE s, uintE d){ //atomic version of Update
-    return (CAS(&Parents[d],UINT_E_MAX,s));
-  }
-  //cond function checks if vertex has been visited yet
-  inline bool cond (uintE d) { return (Parents[d] == UINT_E_MAX); } 
 };
 
 template <class vertex>
@@ -106,8 +193,6 @@ struct d_GCN_F {
   Matrix* next_vertex_embeddings;
   Matrix* prev_vertex_embeddings;
   bool first;
-  //Matrix& d_weights;
-
 
   Matrix* d_weights;
   Matrix* d_skip_weights;
@@ -117,7 +202,6 @@ struct d_GCN_F {
   Matrix* d_prev_vertex_embeddings;
 
   ArrayReducer* reducer;
-
 
   d_GCN_F(uintE* _Parents, graph<vertex>& _GA,
         Matrix& _weights, Matrix* _d_weights,
@@ -158,13 +242,10 @@ struct d_GCN_F {
     // self edge.
     {
       uintE n = v;
-      //double edge_weight = 1.0/sqrt(in_degree + GA.V[n].getInDegree());
       for (int j = 0; j < weights.dimensions()[0]; j++) {
-        //std::cout << prev_vertex_embeddings[n] << std::endl;
         if (d_next_vertex_embeddings[v](j,0) == 0.0) continue;
         for (int k = 0; k < weights.dimensions()[1]; k++) {
-          d_skip_weights_view(j,k) += prev_vertex_embeddings[n](k,0) * d_next_vertex_embeddings[v](j,0);// * edge_weight;
-          //d_prev_vertex_embeddings[n](k,0) += weights(j,k) * d_next_vertex_embeddings[v](k,0);
+          d_skip_weights_view(j,k) += prev_vertex_embeddings[n](k,0) * d_next_vertex_embeddings[v](j,0);
         }
       }
       Matrix& d_prev_vertex_embeddings_n = *(view->get_view(&(d_prev_vertex_embeddings[n])));
@@ -183,11 +264,9 @@ struct d_GCN_F {
         uintE n = neighbors[i];
         double edge_weight = 1.0/sqrt(in_degree + GA.V[n].getOutDegree());
         for (int j = 0; j < weights.dimensions()[0]; j++) {
-          //std::cout << prev_vertex_embeddings[n] << std::endl;
           if (d_next_vertex_embeddings[v](j,0) == 0.0) continue;
           for (int k = 0; k < weights.dimensions()[1]; k++) {
             d_weights_view(j,k) += prev_vertex_embeddings[n](k,0) * d_next_vertex_embeddings[v](j,0) * edge_weight;
-            //d_prev_vertex_embeddings[n](k,0) += weights(j,k) * d_next_vertex_embeddings[v](k,0);
           }
         }
         Matrix& d_prev_vertex_embeddings_n = *(view->get_view(&(d_prev_vertex_embeddings[n])));
@@ -200,195 +279,14 @@ struct d_GCN_F {
         }
       }
     }
-
-    // set next_vertex_embeddings[v] to zero.
-    //for (int i = 0; i < next_vertex_embeddings[v].dimensions()[0]; i++) {
-    //  d_next_vertex_embeddings[v](i,0) = 0.0;
-    //}
-
     return 1;
   }
-
-
-
-
-
-  inline bool updateAtomic (uintE s, uintE d){ //atomic version of Update
-    return (CAS(&Parents[d],UINT_E_MAX,s));
-  }
-  //cond function checks if vertex has been visited yet
-  inline bool cond (uintE d) { return (Parents[d] == UINT_E_MAX); } 
-
 };
 
 
-
-
-
-template <class vertex>
-struct GCN_F {
-
-  graph<vertex>& GA;
-
-  uintE* Parents;
-  Matrix& weights;
-  Matrix& skip_weights;
-  Matrix* next_vertex_embeddings;
-  Matrix* prev_vertex_embeddings;
-  bool first;
-  GCN_F(uintE* _Parents, graph<vertex>& _GA,
-        Matrix& _weights, Matrix& _skip_weights, Matrix* _next_vertex_embeddings,
-        Matrix* _prev_vertex_embeddings, bool _first) : Parents(_Parents), GA(_GA), weights(_weights), skip_weights(_skip_weights),
-                                          next_vertex_embeddings(_next_vertex_embeddings),
-                                          prev_vertex_embeddings(_prev_vertex_embeddings), first(_first) {}
-  //float** next_vertex_embeddings;
-  inline bool update (uintE s, uintE d) {
-    printf("Processing edge %d -> %d\n", s, d);
-    if(Parents[d] == UINT_E_MAX) { Parents[d] = s; return 1; }
-    else return 0;
-    //return 1;
-  }
-
-
-
-
-  inline bool operator() (uintE v) {
-    //printf("processing vertex %d\n", v);
-    uintE* neighbors = reinterpret_cast<uintE*>(GA.V[v].getOutNeighbors());
-    int in_degree = GA.V[v].getOutDegree();
-
-    // self edge
-    {
-      uintE n = v;
-      //double edge_weight = 1.0/sqrt(in_degree + GA.V[n].getInDegree());
-      next_vertex_embeddings[v] = (skip_weights ** prev_vertex_embeddings[n]);// * edge_weight;
-    }
-
-    if (!first) {
-      for (int i = 0; i < in_degree; i++) {
-        uintE n = neighbors[i];
-        double edge_weight = 1.0/sqrt(in_degree + GA.V[n].getOutDegree());
-        next_vertex_embeddings[v] += (weights ** prev_vertex_embeddings[n]) * edge_weight;
-      }
-      next_vertex_embeddings[v] = fmax(0.0, next_vertex_embeddings[v]);
-    }
-    return 1;
-  }
-
-  //inline bool reverse (uintE v, Matrix* d_next_vertex_embeddings, Matrix& d_weights, Matrix* d_prev_vertex_embeddings) {
-
-  //  uintE* neighbors = reinterpret_cast<uintE*>(GA.V[v].getInNeighbors());
-  //  int in_degree = GA.V[v].getInDegree();
-
-  //  // reverse-mode of fmax(0.0, next_vertex_embeddings[v]).
-  //  for (int i = 0; i < next_vertex_embeddings[v].dimensions()[0]; i++) {
-  //    if (next_vertex_embeddings[v](i,0) <= 0.0) {
-  //      d_next_vertex_embeddings[v](i,0) = 0.0;
-  //    }
-  //  }
-
-  //  // reverse of matrix multiplies.
-  //  for (int i = 0; i < in_degree; i++) {
-  //    uintE n = neighbors[i];
-  //    for (int j = 0; j < weights.dimensions()[0]; j++) {
-  //      for (int k = 0; k < weights.dimensions()[1]; k++) {
-  //        d_weights(j,k) += prev_vertex_embeddings[n](k,0) * d_next_vertex_embeddings[v](j,0);
-  //        //d_prev_vertex_embeddings[n](k,0) += weights(j,k) * d_next_vertex_embeddings[v](k,0);
-  //      }
-  //    }
-  //    // propagate to d_prev_vertex_embeddings[n]
-  //    for (int k = 0; k < weights.dimensions()[1]; k++) {
-  //      for (int j = 0; j < weights.dimensions()[0]; j++) {
-  //        d_prev_vertex_embeddings[n](k,0) += weights(j,k) * d_next_vertex_embedding[v](j,0);
-  //      }
-  //    }
-  //  }
-
-
-  //  // set next_vertex_embeddings[v] to zero.
-  //  for (int i = 0; i < next_vertex_embeddings[v].dimensions()[0]; i++) {
-  //    next_vertex_embeddings[v](i,0) = 0.0;
-  //  }
-
-  //  return 1;
-  //}
-
-
-
-
-
-  inline bool updateAtomic (uintE s, uintE d){ //atomic version of Update
-    return (CAS(&Parents[d],UINT_E_MAX,s));
-  }
-  //cond function checks if vertex has been visited yet
-  inline bool cond (uintE d) { return (Parents[d] == UINT_E_MAX); } 
-
-};
-
-
-
-void softmax(Matrix& input, Matrix& output) {
-  // max val divided out for numerical stability
-  Real mval = maxval(input);
-  output = exp(input-mval)/sum(exp(input-mval));
-}
-
-void d_softmax(Matrix& input, Matrix& d_input, Matrix& output, Matrix& d_output) {
-  d_input = -1.0*output * sum(d_output*output) + output*d_output;
-  zero_init(d_output);
-}
-
-void crossentropy(Matrix& yhat, Matrix& y, double& output) {
-  double loss_sum = 0.0;
-  double n = y.dimensions()[0]*y.dimensions()[1];
-  for (int i = 0; i < y.dimensions()[0]; i++) {
-    for (int j = 0; j < y.dimensions()[1]; j++) {
-      loss_sum += -1.0 * y(i,j)*log(yhat(i,j) + 1e-12) - (1.0-y(i,j))*log(1-yhat(i,j) + 1e-12);
-    }
-  }
-  output = loss_sum / n;
-}
-
-void d_crossentropy(Matrix& yhat, Matrix& d_yhat, Matrix& y, double& d_output) {
-   double n = y.dimensions()[0]*y.dimensions()[1];
-   for (int i = 0; i < y.dimensions()[0]; i++) {
-    for (int j = 0; j < y.dimensions()[1]; j++) {
-      //loss_sum += -1.0 * y(i,j)*log(yhat(i,j) + 1e-12) - (1.0-y(i,j))*log(1-yhat(i,j) + 1e-12);
-      d_yhat(i,j) = d_output*(-1.0 * y(i,j) / (yhat(i,j) + 1e-12) + (1.0-y(i,j))*1.0/(1-yhat(i,j)+1e-12)) * (1.0/n);
-    }
-  }
-}
-
-//void d_softmax(Matrix& input, Matrix& d_input, Matrix& output, Matrix& d_output) {
-//  d_input = -1.0*output * sum(d_output*output) + output*d_output;
-//  zero_init(d_output);
-//}
-
-
-
-void sqloss(Matrix& input1, Matrix& input2, double& output) {
-  Matrix diff = input1-input2;
-  output = sum(diff*diff);
-}
-
-void d_sqloss(Matrix& input1, Matrix& d_input1, Matrix& input2,
-              double& d_output) {
-  d_input1 = 2*(input1-input2) * d_output;
-  d_output = 0.0;
-}
-
-
-
-void random_init(std::default_random_engine& gen, Matrix& mat) {
-  std::uniform_real_distribution<double> distribution(0.0, 1.0/(mat.dimensions()[0]*mat.dimensions()[1]));
-  for (int i = 0; i < mat.dimensions()[0]; i++) {
-    for (int j = 0; j < mat.dimensions()[1]; j++) {
-      mat(i,j) = distribution(gen);
-    }
-  }
-}
-
-
+/*
+	Main compute function.
+*/
 
 template <class vertex>
 void Compute(graph<vertex>& GA, commandLine P) {
@@ -404,9 +302,9 @@ void Compute(graph<vertex>& GA, commandLine P) {
 
   int n_vertices = GA.n;
   int feature_dim = 500;
-  bool* is_train = (bool*) calloc(n_vertices, sizeof(bool));
-  bool* is_val = (bool*) calloc(n_vertices, sizeof(bool));
-  bool* is_test = (bool*) calloc(n_vertices, sizeof(bool));
+  bool* is_train = static_cast<bool*>(calloc(n_vertices, sizeof(bool)));
+  bool* is_val = static_cast<bool*>(calloc(n_vertices, sizeof(bool)));
+  bool* is_test = static_cast<bool*>(calloc(n_vertices, sizeof(bool)));
 
 
   std::vector<Matrix> groundtruth_labels;
@@ -428,66 +326,34 @@ void Compute(graph<vertex>& GA, commandLine P) {
                     is_val, is_test, groundtruth_labels,
                     feature_vectors);
 
-  //std::cout << feature_vectors[0] << std::endl;
+  double learning_rate = 0.1;
 
+  std::vector<int> gcn_embedding_dimensions;
+  gcn_embedding_dimensions.push_back(feature_dim);
+  gcn_embedding_dimensions.push_back(32);
+  gcn_embedding_dimensions.push_back(3);
 
-  //Matrix weights = Matrix(3,500);
-  //Matrix weights1 = Matrix(500,32);
-  //Matrix weights2 = Matrix(3,32);
+  std::vector<Matrix> layer_weights, layer_skip_weights, d_layer_weights, d_layer_skip_weights,
+                      layer_weights_momentum, layer_weights_velocity, layer_skip_weights_momentum,
+                      layer_skip_weights_velocity;
 
-  std::vector<Matrix> layer_weights; 
-  layer_weights.push_back(Matrix(32,500));
-  //layer_weights.push_back(Matrix(32,32));
-  layer_weights.push_back(Matrix(3,32));
-
-  std::vector<Matrix> layer_skip_weights; 
-  layer_skip_weights.push_back(Matrix(32,500));
-  //layer_weights.push_back(Matrix(32,32));
-  layer_skip_weights.push_back(Matrix(3,32));
-
-  std::vector<Matrix> d_layer_weights;
-  d_layer_weights.push_back(Matrix(32,500));
-  //d_layer_weights.push_back(Matrix(500,32));
-  d_layer_weights.push_back(Matrix(3,32));
-
-  std::vector<Matrix> d_layer_skip_weights;
-  d_layer_skip_weights.push_back(Matrix(32,500));
-  //d_layer_weights.push_back(Matrix(500,32));
-  d_layer_skip_weights.push_back(Matrix(3,32));
-
-
-  //std::vector<Matrix> d_layer_weights;
-  //d_layer_weights.push_back(Matrix(32,500));
-  //d_layer_weights.push_back(Matrix(3,32));
-
-
-
-  std::vector<Matrix> layer_weights_momentum;
-  layer_weights_momentum.push_back(Matrix(32,500));
-  layer_weights_momentum.push_back(Matrix(3,32));
-
-  std::vector<Matrix> layer_weights_velocity;
-  layer_weights_velocity.push_back(Matrix(32,500));
-  layer_weights_velocity.push_back(Matrix(3,32));
+  for (int i = 0; i < gcn_embedding_dimensions.size()-1; i++) {
+    layer_weights.push_back(Matrix(gcn_embedding_dimensions[i+1], gcn_embedding_dimensions[i]));
+    layer_skip_weights.push_back(Matrix(gcn_embedding_dimensions[i+1], gcn_embedding_dimensions[i]));
+    d_layer_weights.push_back(Matrix(gcn_embedding_dimensions[i+1], gcn_embedding_dimensions[i]));
+    d_layer_skip_weights.push_back(Matrix(gcn_embedding_dimensions[i+1], gcn_embedding_dimensions[i]));
+    layer_weights_momentum.push_back(Matrix(gcn_embedding_dimensions[i+1], gcn_embedding_dimensions[i]));
+    layer_weights_velocity.push_back(Matrix(gcn_embedding_dimensions[i+1], gcn_embedding_dimensions[i]));
+    layer_skip_weights_velocity.push_back(Matrix(gcn_embedding_dimensions[i+1], gcn_embedding_dimensions[i]));
+    layer_skip_weights_momentum.push_back(Matrix(gcn_embedding_dimensions[i+1], gcn_embedding_dimensions[i]));
+  }
 
   for (int i = 0; i < layer_weights.size(); i++) {
     zero_init(layer_weights_momentum[i]);
     zero_init(layer_weights_velocity[i]);
-  }
-
-  std::vector<Matrix> layer_skip_weights_momentum;
-  layer_skip_weights_momentum.push_back(Matrix(32,500));
-  layer_skip_weights_momentum.push_back(Matrix(3,32));
-
-  std::vector<Matrix> layer_skip_weights_velocity;
-  layer_skip_weights_velocity.push_back(Matrix(32,500));
-  layer_skip_weights_velocity.push_back(Matrix(3,32));
-
-  for (int i = 0; i < layer_weights.size(); i++) {
     zero_init(layer_skip_weights_momentum[i]);
     zero_init(layer_skip_weights_velocity[i]);
   }
-
 
   std::default_random_engine generator(1000);
   for (int i = 0; i < layer_weights.size(); i++) {
@@ -500,19 +366,14 @@ void Compute(graph<vertex>& GA, commandLine P) {
   }
   vertexSubset Frontier(n, vIndices); //creates initial frontier
 
-
   for (int iter = 0; iter < 100; iter++) {
-
-
     std::vector<Matrix*> embedding_list, d_embedding_list;
     embedding_list.push_back(&(feature_vectors[0]));
-    embedding_list.push_back(new Matrix[GA.n]);
-    embedding_list.push_back(new Matrix[GA.n]);
+    for (int i = 0; i < gcn_embedding_dimensions.size(); i++) {
+      if (i > 0) embedding_list.push_back(new Matrix[GA.n]);
 
-    d_embedding_list.push_back(new Matrix[GA.n]);
-    d_embedding_list.push_back(new Matrix[GA.n]);
-    d_embedding_list.push_back(new Matrix[GA.n]);
-
+      d_embedding_list.push_back(new Matrix[GA.n]);
+    }
 
     // Forward
     for (int i = 0; i < embedding_list.size()-1; i++) {
@@ -526,31 +387,27 @@ void Compute(graph<vertex>& GA, commandLine P) {
         next_vertex_embeddings[i] = Matrix(weights.dimensions()[0],1);
         zero_init(next_vertex_embeddings[i]);
       }
-      bool first = (i == 0);
+      bool first = (i == embedding_list.size()-2);
       vertexMap(Frontier, GCN_F<vertex>(Parents, GA, weights, skip_weights, next_vertex_embeddings,
                                         prev_vertex_embeddings, first));
     }
 
     Matrix* final_vertex_embeddings = new Matrix[GA.n];
-    //printf("final vertex embedding GA.n=%d\n", GA.n);
     cilk_for (int i = 0; i < GA.n; i++) {
-      //printf("final vertex embeddings i=%d\n", i);
       final_vertex_embeddings[i] = Matrix(3,1);
       softmax(embedding_list[embedding_list.size()-1][i], final_vertex_embeddings[i]);
     }
 
-
     double* losses = new double[GA.n];
     double total_loss = 0.0;
-    int batch_size = 0;
+
     cilk::reducer_opadd<double> total_loss_reducer(total_loss);
-    cilk::reducer_opadd<int> batch_size_reducer(batch_size);
-    
 
-
+    int batch_size = 0;
     int total_val_correct = 0;
     int total_val = 0;
 
+    cilk::reducer_opadd<int> batch_size_reducer(batch_size);
     cilk::reducer_opadd<int> total_val_correct_reducer(total_val_correct);
     cilk::reducer_opadd<int> total_val_reducer(total_val);
 
@@ -576,7 +433,6 @@ void Compute(graph<vertex>& GA, commandLine P) {
         continue;
       }
       *batch_size_reducer += 1;
-      //sqloss(final_vertex_embeddings[i], groundtruth_labels[i], losses[i]);
       crossentropy(final_vertex_embeddings[i], groundtruth_labels[i], losses[i]);
       *total_loss_reducer += losses[i];
     }
@@ -585,16 +441,13 @@ void Compute(graph<vertex>& GA, commandLine P) {
     total_val_correct = total_val_correct_reducer.get_value();
     total_val = total_val_reducer.get_value();
 
-
-    printf("total loss is %f test accuracy %f\n", total_loss/batch_size, (1.0*total_val_correct) / total_val);
-
+    printf("epoch %d: \ttotal loss is %f test accuracy %f\n", iter+1, total_loss/batch_size, (1.0*total_val_correct) / total_val);
 
     // now do reverse.
     Matrix* d_final_vertex_embeddings = new Matrix[GA.n];
     cilk_for (int i = 0; i < GA.n; i++) {
       double d_loss = 1.0/batch_size;
       if (!is_train[i]) d_loss = 0.0;
-      //d_sqloss(final_vertex_embeddings[i], d_final_vertex_embeddings[i], groundtruth_labels[i], d_loss);
       d_final_vertex_embeddings[i] = Matrix(final_vertex_embeddings[i].dimensions()[0], final_vertex_embeddings[i].dimensions()[1]);
       zero_init(d_final_vertex_embeddings[i]);
       d_crossentropy(final_vertex_embeddings[i], d_final_vertex_embeddings[i], groundtruth_labels[i], d_loss);
@@ -608,9 +461,9 @@ void Compute(graph<vertex>& GA, commandLine P) {
     }
 
     for (int i = embedding_list.size()-2; i >= 0; --i) {
-      bool first = (i == 0);
-      Matrix* d_weights = &(d_layer_weights[i]); 
-      Matrix* d_skip_weights = &(d_layer_skip_weights[i]); 
+      bool first = (i == embedding_list.size()-2);
+      Matrix* d_weights = &(d_layer_weights[i]);
+      Matrix* d_skip_weights = &(d_layer_skip_weights[i]);
       Matrix& weights = layer_weights[i];
       Matrix& skip_weights = layer_skip_weights[i];
       zero_init(*d_weights);
@@ -621,14 +474,10 @@ void Compute(graph<vertex>& GA, commandLine P) {
       Matrix* d_prev_vertex_embeddings = d_embedding_list[i];
       Matrix* d_next_vertex_embeddings = d_embedding_list[i+1];
 
-      //Matrix* d_next_vertex_embeddings = new Matrix[GA.n];
-      //Matrix* d_prev_vertex_embeddings = new Matrix[GA.n];
       cilk_for (int i = 0; i < GA.n; i++) {
         d_prev_vertex_embeddings[i] = Matrix(prev_vertex_embeddings[i].dimensions()[0], prev_vertex_embeddings[i].dimensions()[1]);
-        //zero_init(d_next_vertex_embeddings[i]);
         zero_init(d_prev_vertex_embeddings[i]);
       }
-
 
       ArrayReducer reducer;
       vertexMap(Frontier, d_GCN_F<vertex>(Parents, GA, weights, d_weights, skip_weights, d_skip_weights,
@@ -649,43 +498,20 @@ void Compute(graph<vertex>& GA, commandLine P) {
       delete view->get_view(d_skip_weights);
     }
 
-
-
-    apply_gradient_update_ADAM(layer_weights, d_layer_weights, layer_weights_velocity, layer_weights_momentum, 1.0, 0.1, iter+1);
-    apply_gradient_update_ADAM(layer_skip_weights, d_layer_skip_weights, layer_skip_weights_velocity, layer_skip_weights_momentum, 1.0, 0.1, iter+1);
-
-    //for (int l = 0; l < layer_weights.size(); l++) {
-    //  Matrix& weights = layer_weights[l];
-    //  Matrix& d_weights = d_layer_weights[l];
-    //  cilk_for (int i = 0; i < weights.dimensions()[0]; i++) {
-    //    cilk_for (int j = 0; j < weights.dimensions()[1]; j++) {
-    //      weights(i,j) -= 0.1 * (d_weights)(i,j);
-    //    }
-    //  }
-    //}
-
+    apply_gradient_update_ADAM(layer_weights, d_layer_weights, layer_weights_velocity, layer_weights_momentum, 1.0, learning_rate, iter+1);
+    apply_gradient_update_ADAM(layer_skip_weights, d_layer_skip_weights, layer_skip_weights_velocity, layer_skip_weights_momentum, 1.0, learning_rate, iter+1);
 
     for (int i = 1; i < embedding_list.size(); i++) {
       delete[] embedding_list[i];
-    }
-    for (int i = 0; i < embedding_list.size(); i++) {
       delete[] d_embedding_list[i];
     }
 
-    //delete[] next_vertex_embeddings;
     delete[] final_vertex_embeddings;
     delete[] losses;
     delete[] d_final_vertex_embeddings;
-    //delete[] d_next_vertex_embeddings;
-    //delete[] d_prev_vertex_embeddings;
   }
-  //std::cout << d_weights << std::endl;
-  //Frontier.del();
-    //Frontier = output; //set new frontier
-  //}
   Frontier.del();
 
-  //free(vIndices);
   free(is_train);
   free(is_val);
   free(is_test);
