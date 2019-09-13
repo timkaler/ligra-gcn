@@ -262,12 +262,16 @@ namespace adept {
       if (!rhs.get_dimensions(dims)) {
 	std::string str = "FixedArray size mismatch in "
 	  + rhs.expression_string() + ".";
-	throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+	//throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+        printf("size mismatch\n");
+        assert(false);
       }
       else if (!compatible(dims, dimensions())) {
 	std::string str = "Expr";
 	str += dims.str() + " object assigned to " + expression_string_();
-	throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+	//throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+        printf("size mismatch\n");
+        assert(false);
       }
 #endif
       // Select active/passive version by delegating to a protected
@@ -345,11 +349,15 @@ namespace adept {
       if (!bool_expr.get_dimensions(dims)) {
 	std::string str = "FixedArray size mismatch in "
 	  + bool_expr.expression_string() + ".";
-	throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+	//throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+        printf("size mismatch\n");
+        assert(false);
       }
       else if (dims != dimensions()) {
-	throw size_mismatch("Boolean expression of different size"
-			    ADEPT_EXCEPTION_LOCATION);
+	//throw size_mismatch("Boolean expression of different size"
+	//		    ADEPT_EXCEPTION_LOCATION);
+        printf("size mismatch\n");
+        assert(false);
       }
 #endif
       return Where<FixedArray,B>(*this, bool_expr.cast());
@@ -377,11 +385,15 @@ namespace adept {
       if (!rhs.get_dimensions(dims)) {
 	std::string str = "FixedArray size mismatch in "
 	  + rhs.expression_string() + ".";
-	throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+	//throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+        printf("size mismatch\n");
+        assert(false);
       }
       else if (!compatible(dims,dimensions())) {
-	throw size_mismatch("Right-hand-side of \"where\" construct of incompatible size"
-			    ADEPT_EXCEPTION_LOCATION);
+	//throw size_mismatch("Right-hand-side of \"where\" construct of incompatible size"
+	//		    ADEPT_EXCEPTION_LOCATION);
+        printf("size mismatch\n");
+        assert(false);
       }
 #endif
       // Select active/passive version by delegating to a
@@ -399,8 +411,10 @@ namespace adept {
       ADEPT_STATIC_ASSERT(rank==1, RANK_MISMATCH_IN_INITIALIZER_LIST);
 
       if (list.size() > J0) {
-	throw size_mismatch("Initializer list is larger than Vector in assignment"
-			    ADEPT_EXCEPTION_LOCATION);
+	//throw size_mismatch("Initializer list is larger than Vector in assignment"
+	//		    ADEPT_EXCEPTION_LOCATION);
+        printf("size mismatch\n");
+        assert(false);
       }
       // Zero the whole array first in order that automatic
       // differentiation works
@@ -419,8 +433,10 @@ namespace adept {
       ADEPT_STATIC_ASSERT(rank==initializer_list_rank<IType>::value+2,
       			  RANK_MISMATCH_IN_INITIALIZER_LIST);
       if (list.size() > J0) {
-	throw size_mismatch("Multi-dimensional initializer list larger than slowest-varying dimension of Array"
-			    ADEPT_EXCEPTION_LOCATION);
+	//throw size_mismatch("Multi-dimensional initializer list larger than slowest-varying dimension of Array"
+	//		    ADEPT_EXCEPTION_LOCATION);
+        printf("size mismatch\n");
+        assert(false);
       }
       // Zero the whole array first in order that automatic
       // differentiation works
@@ -1197,8 +1213,10 @@ namespace adept {
 	return Array<1,Type,IsActive>();
       }
       else if (J0 != J1) {
-	throw invalid_operation("diag_vector member function only applicable to square matrices"
-				ADEPT_EXCEPTION_LOCATION);
+	//throw invalid_operation("diag_vector member function only applicable to square matrices"
+	//			ADEPT_EXCEPTION_LOCATION);
+        printf("invalid operation\n");
+        assert(false);
       }
       else if (offdiag >= 0) {
 	Index new_dim = std::min(J0, J1-offdiag);
@@ -1222,12 +1240,16 @@ namespace adept {
       ADEPT_STATIC_ASSERT(rank == 2,
 		SUBMATRIX_ON_DIAGONAL_ONLY_WORKS_ON_SQUARE_MATRICES);
       if (J0 != J1) {
-	throw invalid_operation("submatrix_on_diagonal member function only applicable to square matrices"
-				ADEPT_EXCEPTION_LOCATION);
+	//throw invalid_operation("submatrix_on_diagonal member function only applicable to square matrices"
+	//			ADEPT_EXCEPTION_LOCATION);
+        printf("invalid oepration\n");
+        assert(false);
       }
       else if (ibegin < 0 || ibegin > iend || iend >= J0) {
-	throw index_out_of_bounds("Dimensions out of range in submatrix_on_diagonal"
-				  ADEPT_EXCEPTION_LOCATION);
+	//throw index_out_of_bounds("Dimensions out of range in submatrix_on_diagonal"
+	//			  ADEPT_EXCEPTION_LOCATION);
+        printf("index out of bounds\n");
+        assert(false);
       }
       else {
 	Index len = iend-ibegin+1;
@@ -1493,7 +1515,10 @@ namespace adept {
       else if (j == 4) { return offset_<4>::value; }
       else if (j == 5) { return offset_<5>::value; }
       else if (j == 6) { return offset_<6>::value; }
-      else { throw invalid_dimension(); }
+      else { //throw invalid_dimension(); 
+        printf("invalid dimension\n");
+        assert(false);
+      }
     }
 
     // Return constant reference to offsets
@@ -1717,8 +1742,10 @@ namespace adept {
     // that will be dimension 1 of the new array and so on.
     Array<rank,Type,IsActive> permute(const Index* idim) {
       if (empty()) {
-	throw empty_array("Attempt to permute an empty array"
-			  ADEPT_EXCEPTION_LOCATION);
+	//throw empty_array("Attempt to permute an empty array"
+	//		  ADEPT_EXCEPTION_LOCATION);
+        printf("empty array\n");
+        assert(false);
       }
       ExpressionSize<rank> new_dims(0);
       ExpressionSize<rank> new_offset;
@@ -1731,14 +1758,18 @@ namespace adept {
 	  new_offset[i] = offs[idim[i]];
 	}
 	else {
-	  throw invalid_dimension("Dimensions must be in range 0 to rank-1 in permute"
-				  ADEPT_EXCEPTION_LOCATION);
+	  //throw invalid_dimension("Dimensions must be in range 0 to rank-1 in permute"
+	//			  ADEPT_EXCEPTION_LOCATION);
+          printf("invalid dimension\n");
+          assert(false);
 	}
       }
       for (int i = 0; i < rank; ++i) {
 	if (new_dims[i] == 0) {
-	  throw invalid_dimension("Missing dimension in permute"
-				  ADEPT_EXCEPTION_LOCATION);
+	  //throw invalid_dimension("Missing dimension in permute"
+	//			  ADEPT_EXCEPTION_LOCATION);
+          printf("invalid dimension\n");
+          assert(false);
 	}
       }
       return Array<rank,Type,IsActive>(data_, 0, new_dims, new_offset,
@@ -1757,8 +1788,10 @@ namespace adept {
       Index idim[7] = {i0, i1, i2, i3, i4, i5, i6};
       for (int i = 0; i < rank; ++i) {
 	if (idim[i] == -1) {
-	  throw invalid_dimension("Incorrect number of dimensions provided to permute"
-				  ADEPT_EXCEPTION_LOCATION);
+	  //throw invalid_dimension("Incorrect number of dimensions provided to permute"
+	//			  ADEPT_EXCEPTION_LOCATION);
+          printf("invalid dimension\n");
+          assert(false);
 	}
       }
       return permute(idim);
@@ -1774,8 +1807,10 @@ namespace adept {
 	gradient.resize(dimensions());
       }
       else if (gradient.dimensions() != dimensions()) {
-	throw size_mismatch("Attempt to get_gradient with array of different dimensions"
-			    ADEPT_EXCEPTION_LOCATION);
+	//throw size_mismatch("Attempt to get_gradient with array of different dimensions"
+	//		    ADEPT_EXCEPTION_LOCATION);
+        printf("size mismatch\n");
+        assert(false);
       }
       static const int last = rank-1;
       ExpressionSize<rank> target_offset = gradient.offset();

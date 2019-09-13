@@ -60,7 +60,9 @@ namespace adept {
     if (!rhs.get_dimensions(length)) {
       std::string str = "Array size mismatch in "
 	+ rhs.expression_string() + ".";
-      throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+      //throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+      printf("size mismatch\n");
+      assert(false);
     }
     // Length of the rank-1 expression
     Index& len = length[0];
@@ -381,7 +383,9 @@ namespace adept {
       if (!rhs.get_dimensions(dims)) {
 	std::string str = "Array size mismatch in "
 	  + rhs.expression_string() + ".";
-	throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+//	throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+        printf("size mismatch\n");
+        assert(false);
       }
       else if (dims[0] == 0) {
 	// Return zero if any of these functions applied to an empty
@@ -432,7 +436,9 @@ namespace adept {
       if (!rhs.get_dimensions(dims)) {
 	std::string str = "Array size mismatch in "
 	  + rhs.expression_string() + ".";
-	throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+//	throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+      printf("size mismatch\n");
+      assert(false);
       }
       else if (dims[0] == 0) {
 	// Return zero if any of these functions applied to an empty
@@ -526,7 +532,9 @@ namespace adept {
       if (!rhs.get_dimensions(dims)) {
 	std::string str = "Array size mismatch in "
 	  + rhs.expression_string() + ".";
-	throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+	//throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+      printf("size mismatch\n");
+      assert(false);
       }
       else if (dims[0] == 0) {
 	// Return empty array if any of these functions applied to an
@@ -538,7 +546,9 @@ namespace adept {
 	s << "In " << f.name() << "(Expression<rank="
 	  << E::rank << ">,dim=" << reduce_dim 
 	  << "), dim must be less than rank.";
-	throw invalid_dimension(s.str() ADEPT_EXCEPTION_LOCATION);
+//	throw invalid_dimension(s.str() ADEPT_EXCEPTION_LOCATION);
+      printf("invalid dimension\n");
+      assert(false);
       }
       else {
 	// New array has the same dimensions as the input but with one
@@ -633,7 +643,9 @@ namespace adept {
       if (!rhs.get_dimensions(dims)) {
 	std::string str = "Array size mismatch in "
 	  + rhs.expression_string() + ".";
-	throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+//	throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+      printf("size mismatch\n");
+      assert(false);
       }
       else if (dims[0] == 0) {
 	// Return zero if any of these functions applied to an empty
@@ -698,7 +710,9 @@ namespace adept {
       if (!rhs.get_dimensions(dims)) {
 	std::string str = "Array size mismatch in "
 	  + rhs.expression_string() + ".";
-	throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+	//throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+      printf("size mismatch\n");
+      assert(false);
       }
       else if (dims[0] == 0) {
 	// Return empty array if any of these functions applied to an
@@ -710,7 +724,9 @@ namespace adept {
 	s << "In " << f.name() << "(Expression<rank="
 	  << E::rank << ">,dim=" << reduce_dim 
 	  << "), dim must be less than rank.";
-	throw invalid_dimension(s.str() ADEPT_EXCEPTION_LOCATION);
+	//throw invalid_dimension(s.str() ADEPT_EXCEPTION_LOCATION);
+      printf("invalid dimension\n");
+      assert(false);
       }
       else {
 	// New array has the same dimensions as the input but with one
@@ -822,8 +838,8 @@ namespace adept {
 				     Type>::type	\
   NAME(const Expression<Type, E>& rhs, int dim) {	\
     if (dim != 0) {					\
-      throw invalid_dimension("Two-argument reduce function applied to vector must have zero as second argument" \
-			      ADEPT_EXCEPTION_LOCATION);		\
+      printf("Two-argument reduce function applied to vector must have zero as second argument"); \
+      assert(false);		\
     }							\
     return reduce_inactive<CLASSNAME<Type> >(rhs);	\
   }							\
@@ -835,8 +851,8 @@ namespace adept {
 		     Active<Type> >::type		\
   NAME(const Expression<Type, E>& rhs, int dim) {	\
     if (dim != 0) {					\
-      throw invalid_dimension("Two-argument reduce function applied to vector must have zero as second argument" \
-			    ADEPT_EXCEPTION_LOCATION);			\
+      printf("Two-argument reduce function applied to vector must have zero as second argument"); \
+      assert(false);		\
     }							\
     Active<Type> result;				\
     reduce_active<CLASSNAME<Type> >(rhs, result);		\
@@ -940,7 +956,9 @@ namespace adept {
       std::string str;
       str += "Array size mismatch in ";
       str += arg.expression_string();
-      throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+      //throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+      printf("size mismatch\n");
+      assert(false);
     }
 
     ExpressionSize<2> i;
@@ -977,7 +995,9 @@ namespace adept {
       std::string str;
       str += "Array size mismatch in ";
       str += arg.expression_string();
-      throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+      //throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+      printf("size mismatch\n");
+      assert(false);
     }
 
     ExpressionSize<2> i;

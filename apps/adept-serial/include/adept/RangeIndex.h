@@ -81,8 +81,11 @@ namespace adept {
       // expression: when used in any other context it will fail.
       template <int Rank>
       Index value_at_location_(const ExpressionSize<Rank>&) const
-      { throw array_exception("Cannot determine to which object the \"end\" index refers to"
-			      ADEPT_EXCEPTION_LOCATION); }
+      {// throw array_exception("Cannot determine to which object the \"end\" index refers to"
+	//		      ADEPT_EXCEPTION_LOCATION); 
+        printf("cannot determine which objhect the end index refers to.\n");
+        assert(false);
+      }
     };
     
     // ---------------------------------------------------------------------
@@ -110,7 +113,9 @@ namespace adept {
     // Bounds-checking versions
     inline Index get_index_with_len(Index j, Index len) {
       if (j < 0 || j >= len) {
-	throw index_out_of_bounds();
+	//throw index_out_of_bounds();
+        printf("index out of range\n");
+        assert(false);
       }
       else {
 	return j; 
@@ -124,8 +129,10 @@ namespace adept {
     get_index_with_len(const Expression<T,E>& j, Index len) {
       Index ind = j.value_with_len(0, len);
       if (ind < 0 || ind >= len) {
-	throw index_out_of_bounds("Array index (probably generated from a scalar expression containing \"end\") is out of bounds"
-				  ADEPT_EXCEPTION_LOCATION);
+	//throw index_out_of_bounds("Array index (probably generated from a scalar expression containing \"end\") is out of bounds"
+	//			  ADEPT_EXCEPTION_LOCATION);
+        printf("index out of bounds\n");
+        assert(false);
       }
       else {
 	return ind;

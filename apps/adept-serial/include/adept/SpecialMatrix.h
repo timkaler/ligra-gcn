@@ -313,8 +313,10 @@ namespace adept {
 		    Index gradient_index, Type* data) {
 	Index off = j-i;
 	if (off > UDiags || off < (-LDiags)) {
-	  throw index_out_of_bounds("Attempt to get lvalue to off-diagonal in BandMatrix"
-				    ADEPT_EXCEPTION_LOCATION);
+	  //throw index_out_of_bounds("Attempt to get lvalue to off-diagonal in BandMatrix"
+	//			    ADEPT_EXCEPTION_LOCATION);
+          printf("index out of bounds\n");
+          assert(false);
 	}
 	else {
 	  return data[index(i,j,offset)]; 
@@ -326,8 +328,10 @@ namespace adept {
 		    Index gradient_index, Type* data) {
 	Index off = j-i;
 	if (off > UDiags || off < (-LDiags)) {
-	  throw index_out_of_bounds("Attempt to get lvalue to off-diagonal in BandMatrix"
-				    ADEPT_EXCEPTION_LOCATION);
+	  //throw index_out_of_bounds("Attempt to get lvalue to off-diagonal in BandMatrix"
+	//			    ADEPT_EXCEPTION_LOCATION);
+          printf("index out of bounds\n");
+          assert(false);
 	}
 	else {
 	  Index ind = index(i,j,offset);
@@ -346,14 +350,18 @@ namespace adept {
       }
       void check_upper_diag(Index offdiag) const {
 	if (offdiag > UDiags) {
-	  throw index_out_of_bounds("Attempt to get lvalue diagonal to off-diagonal in BandMatrix"
-				    ADEPT_EXCEPTION_LOCATION);	  
+	  //throw index_out_of_bounds("Attempt to get lvalue diagonal to off-diagonal in BandMatrix"
+	//			    ADEPT_EXCEPTION_LOCATION);	  
+          printf("index out of bounds\n");
+          assert(false);
 	}
       }
       void check_lower_diag(Index offdiag) const { 
 	if (-offdiag > LDiags) {
-	  throw index_out_of_bounds("Attempt to get lvalue diagonal to off-diagonal in BandMatrix"
-				    ADEPT_EXCEPTION_LOCATION);
+	  //throw index_out_of_bounds("Attempt to get lvalue diagonal to off-diagonal in BandMatrix"
+	//			    ADEPT_EXCEPTION_LOCATION);
+          printf("index out of boudns\n");
+          assert(false);
 	}
       }
       template <int MyArrayNum, int NArrays>
@@ -447,8 +455,9 @@ namespace adept {
 		    Index gradient_index, Type* data) {
 	Index off = j-i;
 	if (off > UDiags || off < (-LDiags)) {
-	  throw index_out_of_bounds("Attempt to get lvalue to off-diagonal in BandMatrix"
-				    ADEPT_EXCEPTION_LOCATION);
+	  //throw index_out_of_bounds("Attempt to get lvalue to off-diagonal in BandMatrix"
+	//			    ADEPT_EXCEPTION_LOCATION);
+          printf("index out of bounds\n");
 	}
 	else {
 	  return data[index(i,j,offset)]; 
@@ -460,8 +469,10 @@ namespace adept {
 		    Index gradient_index, Type* data) {
 	Index off = j-i;
 	if (off > UDiags || off < (-LDiags)) {
-	  throw index_out_of_bounds("Attempt to get lvalue to off-diagonal in BandMatrix"
-				    ADEPT_EXCEPTION_LOCATION);
+	  //throw index_out_of_bounds("Attempt to get lvalue to off-diagonal in BandMatrix"
+	//			    ADEPT_EXCEPTION_LOCATION);
+          printf("index out of bounds\n");
+          assert(false);
 	}
 	else {
 	  Index ind = index(i,j,offset);
@@ -679,8 +690,10 @@ namespace adept {
       }
       void check_upper_diag(Index offdiag) const {
 	if (offdiag > 0) {
-	  throw index_out_of_bounds("Attempt to get lvalue to an upper diagonal of a lower-triangular matrix"
-				    ADEPT_EXCEPTION_LOCATION);	  
+	  //throw index_out_of_bounds("Attempt to get lvalue to an upper diagonal of a lower-triangular matrix"
+		//		    ADEPT_EXCEPTION_LOCATION);	  
+          printf("index out of bounds\n");
+          assert(false);
 	}
       }
       template <bool IsActive, typename Type>
@@ -713,8 +726,10 @@ namespace adept {
 	  return data[index(i,j,offset)]; 
 	}
 	else {
-	  throw index_out_of_bounds("Attempt to get lvalue to upper part of lower-triangular matrix"
-				    ADEPT_EXCEPTION_LOCATION);
+	  //throw index_out_of_bounds("Attempt to get lvalue to upper part of lower-triangular matrix"
+	//			    ADEPT_EXCEPTION_LOCATION);
+          printf("index out of bounds\n");
+          assert(false);
 	}
       }
       template <bool IsActive, typename Type>
@@ -726,8 +741,10 @@ namespace adept {
 	  return ActiveReference<Type>(data[ind], gradient_index+ind);
 	}
 	else {
-	  throw index_out_of_bounds("Attempt to get lvalue to upper part of lower-triangular matrix"
-				    ADEPT_EXCEPTION_LOCATION);
+	  //throw index_out_of_bounds("Attempt to get lvalue to upper part of lower-triangular matrix"
+	//			    ADEPT_EXCEPTION_LOCATION);
+          printf("index out of bounds\n");
+          assert(false);
 	  
 	}
       }
@@ -806,8 +823,10 @@ namespace adept {
       }
       void check_lower_diag(Index offdiag) const {
 	if (offdiag < 0) {
-	  throw index_out_of_bounds("Attempt to get lvalue to a lower diagonal of an upper-triangular matrix"
-				    ADEPT_EXCEPTION_LOCATION);	  
+	  //throw index_out_of_bounds("Attempt to get lvalue to a lower diagonal of an upper-triangular matrix"
+	//			    ADEPT_EXCEPTION_LOCATION);	  
+          printf("index out of bounds\n");
+          assert(false);
 	}
       }
 
@@ -841,8 +860,10 @@ namespace adept {
 	  return data[index(i,j,offset)]; 
 	}
 	else {
-	  throw index_out_of_bounds("Attempt to get lvalue to lower part of upper-triangular matrix"
-				    ADEPT_EXCEPTION_LOCATION);
+	  //throw index_out_of_bounds("Attempt to get lvalue to lower part of upper-triangular matrix"
+		//		    ADEPT_EXCEPTION_LOCATION);
+          printf("index out of bounds\n");
+          assert(false);
 	}
       }
       template <bool IsActive, typename Type>
@@ -854,8 +875,10 @@ namespace adept {
 	  return ActiveReference<Type>(data[ind], gradient_index+ind);
 	}
 	else {
-	  throw index_out_of_bounds("Attempt to get lvalue to lower part of upper-triangular matrix"
-				    ADEPT_EXCEPTION_LOCATION);
+	  //throw index_out_of_bounds("Attempt to get lvalue to lower part of upper-triangular matrix"
+		//		    ADEPT_EXCEPTION_LOCATION);
+          printf("index out of bounds\n");
+          assert(false);
 	  
 	}
       }
@@ -1054,7 +1077,9 @@ namespace adept {
       if (!rhs.get_dimensions(dims)) {
 	std::string str = "Array size mismatch in "
 	  + rhs.expression_string() + ".";
-	throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+	//throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+        printf("size mismatch\n");
+        assert(false);
       }
       else if (empty()) {
 	resize(dims[0], dims[1]);
@@ -1062,7 +1087,9 @@ namespace adept {
       else if (!compatible(dims, dimensions())) {
 	std::string str = "Expr";
 	str += dims.str() + " object assigned to " + expression_string_();
-	throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+	//throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+        printf("size mismatch\n");
+        assert(false);
       }
 #else
       if (empty()) {
@@ -1070,7 +1097,9 @@ namespace adept {
 	if (!rhs.get_dimensions(dims)) {
 	  std::string str = "Array size mismatch in "
 	    + rhs.expression_string() + ".";
-	  throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+	//  throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+          printf("size mismatch\n");
+          assert(false);
 	}
 	resize(dims[0], dims[1]);
       }
@@ -1112,7 +1141,9 @@ namespace adept {
       if (!rhs.get_dimensions(dims)) {
 	std::string str = "Array size mismatch in "
 	  + rhs.expression_string() + ".";
-	throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+	//throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+        printf("size mismatch\n");
+        assert(false);
       }
       else if (empty()) {
 	resize(dims[0], dims[1]);
@@ -1120,7 +1151,9 @@ namespace adept {
       else if (!compatible(dims, dimensions())) {
 	std::string str = "Expr";
 	str += dims.str() + " object assigned to " + expression_string_();
-	throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+	//throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+        printf("size mismatch\n");
+        assert(false);
       }
 
       if (!empty()) {
@@ -1329,8 +1362,10 @@ namespace adept {
     SpecialMatrix
     submatrix_on_diagonal(Index istart, Index iend) {
       if (istart < 0 || istart > iend || iend >= dimension_) {
-	throw index_out_of_bounds("Dimensions out of range in submatrix_on_diagonal"
-				  ADEPT_EXCEPTION_LOCATION);
+	//throw index_out_of_bounds("Dimensions out of range in submatrix_on_diagonal"
+	//			  ADEPT_EXCEPTION_LOCATION);
+        printf("index out of bounds\n");
+        assert(false);
       }
       return SpecialMatrix(data_+(offset_+1)*istart, 
 			  storage_, iend-istart+1, offset_);
@@ -1365,8 +1400,10 @@ namespace adept {
     // Link to an existing array of the same rank, type and activeness
     SpecialMatrix& link(SpecialMatrix& rhs) {
       if (!rhs.data()) {
-	throw empty_array("Attempt to link to empty array"
-			  ADEPT_EXCEPTION_LOCATION);
+	//throw empty_array("Attempt to link to empty array"
+	//		  ADEPT_EXCEPTION_LOCATION);
+        printf("empty array\n");
+        assert(false);
       }
       else {
 	clear();
@@ -1505,8 +1542,10 @@ namespace adept {
       }
       // Check requested dimensions
       if (dim < 0) {
-	throw invalid_dimension("Negative array dimension requested"
-				ADEPT_EXCEPTION_LOCATION);
+	//throw invalid_dimension("Negative array dimension requested"
+	//			ADEPT_EXCEPTION_LOCATION);
+        printf("invalid dimension\n");
+        assert(false);
       }
       else if (dim == 0) {
 	clear();
@@ -1523,8 +1562,10 @@ namespace adept {
     // Resize with an ExpressionSize object
     void resize(Index dim0, Index dim1) {
       if (dim0 != dim1) {
-	throw invalid_dimension("Square matrix must have the same x and y dimensions"
-				ADEPT_EXCEPTION_LOCATION);
+	//throw invalid_dimension("Square matrix must have the same x and y dimensions"
+	//			ADEPT_EXCEPTION_LOCATION);
+        printf("invalid dimension\n");
+        assert(false);
       }
       resize(dim0);
     }

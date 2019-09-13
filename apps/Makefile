@@ -25,16 +25,17 @@ endif
 #compilers
 ifdef CILK
 PCC = ./setup.sh clang++
-PCFLAGS = -std=c++14 -g -fcilkplus -lcilkrts -lblas -lprofiler -I./adept-serial/include -O3 -DADEPT_STORAGE_THREAD_SAFE -DCILK $(INTT) $(INTE) $(CODE) $(PD) $(MEM)
+PCFLAGS = -std=c++14 -g -fcilkplus -lcilkrts -lblas -lprofiler -I./ -O3 -DADEPT_STORAGE_THREAD_SAFE -DCILK $(INTT) $(INTE) $(CODE) $(PD) $(MEM)
 PLFLAGS = -fcilkplus -lcilkrts -lblas -lprofiler
 
 else ifdef MKLROOT
 PCC = icpc
 PCFLAGS = -std=c++14 -O3 -DCILKP $(INTT) $(INTE) $(CODE) $(PD) $(MEM)
 
+#./setup.sh clang++
 else ifdef OPENMP
 PCC = g++
-PCFLAGS = -std=c++14 -fopenmp -march=native -O3 -DOPENMP $(INTT) $(INTE) $(CODE) $(PD) $(MEM)
+PCFLAGS = -std=c++14 -fopenmp -march=native -O3 -I./ -DOPENMP $(INTT) $(INTE) $(CODE) $(PD) $(MEM)
 
 else
 PCC = g++

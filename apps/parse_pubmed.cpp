@@ -9,8 +9,8 @@ using std::ios;
 
 void parse_pubmed_data(std::string train_filename, std::string val_filename,
                        std::string test_filename, std::string feature_filename, bool* is_train,
-                       bool* is_val, bool* is_test, std::vector<Matrix>& labels,
-                       std::vector<Matrix>& features) {
+                       bool* is_val, bool* is_test, std::vector<MatrixXf>& labels,
+                       std::vector<MatrixXf>& features) {
   {
     std::ifstream f(train_filename);
     std::string line;
@@ -22,9 +22,9 @@ void parse_pubmed_data(std::string train_filename, std::string val_filename,
 
       if (c1+c2+c3 > 0.5) {
         is_train[id] = true;
-        labels[id][0] = c1;
-        labels[id][1] = c2;
-        labels[id][2] = c3;
+        labels[id](0,0) = c1;
+        labels[id](1,0) = c2;
+        labels[id](2,0) = c3;
       }
     }
   }
@@ -41,9 +41,9 @@ void parse_pubmed_data(std::string train_filename, std::string val_filename,
 
       if (c1+c2+c3 > 0.5) {
         is_val[id] = true;
-        labels[id][0] = c1;
-        labels[id][1] = c2;
-        labels[id][2] = c3;
+        labels[id](0,0) = c1;
+        labels[id](1,0) = c2;
+        labels[id](2,0) = c3;
       }
     }
   }
@@ -60,9 +60,9 @@ void parse_pubmed_data(std::string train_filename, std::string val_filename,
 
       if (c1+c2+c3 > 0.5) {
         is_test[id] = true;
-        labels[id][0] = c1;
-        labels[id][1] = c2;
-        labels[id][2] = c3;
+        labels[id](0,0) = c1;
+        labels[id](1,0) = c2;
+        labels[id](2,0) = c3;
       }
     }
   }

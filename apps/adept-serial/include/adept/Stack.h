@@ -152,8 +152,10 @@ namespace adept {
 
     // This function is no longer available
     void start(uIndex n = ADEPT_INITIAL_STACK_LENGTH) {
-      throw feature_not_available("The Stack::start() function has been removed since Adept version 1.0: see the documentation about how to use Stack::new_recording()"
-				  ADEPT_EXCEPTION_LOCATION);
+      //throw feature_not_available("The Stack::start() function has been removed since Adept version 1.0: see the documentation about how to use Stack::new_recording()"
+      //				  ADEPT_EXCEPTION_LOCATION);
+      printf("Feature unavailable exception.\n");
+      assert(false);
     }
 
     // After a sequence of operation pushes, we may append these to
@@ -294,7 +296,9 @@ namespace adept {
 	initialize_gradients();
       }
       if (end_plus_one > max_gradient_) {
-	throw gradient_out_of_range();
+	//throw gradient_out_of_range();
+        printf("Gradient out of range.\n");
+        assert(false);
       }
       for (uIndex i = start, j = 0; i < end_plus_one; i++, j++) {
 	gradient_[i] = gradient[j];
@@ -310,10 +314,14 @@ namespace adept {
     get_gradients(uIndex start, uIndex end_plus_one,
 		  MyReal* gradient) const {
       if (!gradients_are_initialized()) {
-	throw gradients_not_initialized();
+	//throw gradients_not_initialized();
+        printf("gradients not initialized\n");
+        assert(false);
       }
       if (end_plus_one > max_gradient_) {
-	throw gradient_out_of_range();
+        printf("gradient out of range\n");
+        assert(false);
+	//throw gradient_out_of_range();
       }
       for (uIndex i = start, j = 0; i < end_plus_one; i++, j++) {
 	gradient[j] = gradient_[i];
@@ -325,10 +333,14 @@ namespace adept {
     get_gradients(uIndex start, uIndex end_plus_one,
 		  MyReal* gradient, Index src_stride, Index target_stride) const {
       if (!gradients_are_initialized()) {
-	throw gradients_not_initialized();
+	//throw gradients_not_initialized();
+        printf("gradients not initialized\n");
+        assert(false);
       }
       if (end_plus_one > max_gradient_) {
-	throw gradient_out_of_range();
+	//throw gradient_out_of_range();
+        printf("gradient out of range\n");
+        assert(false);
       }
       for (uIndex i = start, j = 0; i < end_plus_one; i+=src_stride, j+=target_stride) {
 	gradient[j] = gradient_[i];
@@ -461,13 +473,17 @@ namespace adept {
 
     // Function now removed
     void clear() {
-      throw feature_not_available("The Stack::clear() function has been removed since Adept version 1.0: see the documentation about how to use Stack::new_recording()"
-				  ADEPT_EXCEPTION_LOCATION);
+      //throw feature_not_available("The Stack::clear() function has been removed since Adept version 1.0: see the documentation about how to use Stack::new_recording()"
+	//			  ADEPT_EXCEPTION_LOCATION);
+      printf("feature not available\n");
+      assert(false);
     }
     // Function now removed
     void clear_statements() {
-      throw feature_not_available("The Stack::clear_statements() function has been removed since Adept version 1.0: see the documentation about how to use Stack::new_recording()"
-				  ADEPT_EXCEPTION_LOCATION);
+      //throw feature_not_available("The Stack::clear_statements() function has been removed since Adept version 1.0: see the documentation about how to use Stack::new_recording()"
+	//			  ADEPT_EXCEPTION_LOCATION);
+      printf("feature not available\n");
+      assert(false);
     }
 
     // Make this stack "active" by copying its "this" pointer to a
@@ -581,8 +597,10 @@ namespace adept {
 	  push_rhs(multiplier, rhs_index);
 	}
 	if (!update_lhs(lhs_index)) {
-	  throw wrong_gradient("Wrong gradient: append_derivative_dependence called on a different active number from the most recent add_derivative_dependence call"
-			       ADEPT_EXCEPTION_LOCATION);
+	  //throw wrong_gradient("Wrong gradient: append_derivative_dependence called on a different active number from the most recent add_derivative_dependence call"
+	//		       ADEPT_EXCEPTION_LOCATION);
+          printf("wrong gradient\n");
+          assert(false);
 	}
 #ifdef ADEPT_RECORDING_PAUSABLE
       }

@@ -401,7 +401,9 @@ namespace adept {
        array_print_empty_rank = true;
        break;
     default:
-      throw invalid_operation("Array print style not understood");
+      //throw invalid_operation("Array print style not understood");
+      printf("invalid operation\n");
+      assert(false);
     }
     array_print_style = ps;
   }
@@ -427,6 +429,7 @@ namespace adept {
 
 #include <iostream>
 #include <cstring> // For memcpy
+
 
 
 #ifdef _OPENMP
@@ -479,7 +482,9 @@ namespace adept {
 	 && _stack_current_thread_unsafe != this)
 	|| ((!is_thread_unsafe_) && _stack_current_thread
 	    && _stack_current_thread != this)) {
-      throw(stack_already_active());
+      //throw(stack_already_active());
+      printf("stack already active\n");
+      assert(false);
     }
     else {
       if (!is_thread_unsafe_) {
@@ -574,7 +579,9 @@ namespace adept {
       }
     }  
     else {
-      throw(gradients_not_initialized());
+      //throw(gradients_not_initialized());
+      printf("gradients not initialized\n");
+      assert(false);
     }  
   }
 
@@ -600,7 +607,9 @@ namespace adept {
       }
     }
     else {
-      throw(gradients_not_initialized());
+      //throw(gradients_not_initialized());
+      printf("gradients not initialized\n");
+      assert(false);
     }
   }
 
@@ -1483,8 +1492,10 @@ namespace adept {
     using internal::cpplapack_getri;
 
     if (A.dimension(0) != A.dimension(1)) {
-      throw invalid_operation("Only square matrices can be inverted"
-			      ADEPT_EXCEPTION_LOCATION);
+      //throw invalid_operation("Only square matrices can be inverted"
+	//		      ADEPT_EXCEPTION_LOCATION);
+      printf("invalid operation\n");
+      assert(false);
     }
 
     Array<2,Type,false> A_;
@@ -1503,7 +1514,9 @@ namespace adept {
     if (status != 0) {
       std::stringstream s;
       s << "Failed to factorize matrix: LAPACK ?getrf returned code " << status;
-      throw(matrix_ill_conditioned(s.str() ADEPT_EXCEPTION_LOCATION));
+      //throw(matrix_ill_conditioned(s.str() ADEPT_EXCEPTION_LOCATION));
+      printf("matrix ill conditioned\n");
+      assert(false);
     }
 
     //    status = LAPACKE_dgetri(LAPACK_COL_MAJOR, A_.dimension(0),
@@ -1514,7 +1527,9 @@ namespace adept {
     if (status != 0) {
       std::stringstream s;
       s << "Failed to invert matrix: LAPACK ?getri returned code " << status;
-      throw(matrix_ill_conditioned(s.str() ADEPT_EXCEPTION_LOCATION));
+      //throw(matrix_ill_conditioned(s.str() ADEPT_EXCEPTION_LOCATION));
+      printf("matrix ill conditioned\n");
+      assert(false);
     }
     return A_;
   }
@@ -1553,7 +1568,9 @@ namespace adept {
     if (status != 0) {
       std::stringstream s;
       s << "Failed to factorize symmetric matrix: LAPACK ?sytrf returned code " << status;
-      throw(matrix_ill_conditioned(s.str() ADEPT_EXCEPTION_LOCATION));
+      //throw(matrix_ill_conditioned(s.str() ADEPT_EXCEPTION_LOCATION));
+      printf("matrix ill conditioned\n");
+      assert(false);
     }
 
     //    status = LAPACKE_dsytri(LAPACK_COL_MAJOR, uplo, A_.dimension(),
@@ -1563,7 +1580,9 @@ namespace adept {
     if (status != 0) {
       std::stringstream s;
       s << "Failed to invert symmetric matrix: LAPACK ?sytri returned code " << status;
-      throw(matrix_ill_conditioned(s.str() ADEPT_EXCEPTION_LOCATION));
+      //throw(matrix_ill_conditioned(s.str() ADEPT_EXCEPTION_LOCATION));
+      printf("matrix ill conditioned\n");
+      assert(false);
     }
     return A_;
   }
@@ -1580,7 +1599,9 @@ namespace adept {
   template <typename Type>
   Array<2,Type,false> 
   inv(const Array<2,Type,false>& A) {
-    throw feature_not_available("Cannot invert matrix because compiled without LAPACK");
+    //throw feature_not_available("Cannot invert matrix because compiled without LAPACK");
+    printf("feature not available\n");
+    assert(false);
   }
 
   // -------------------------------------------------------------------
@@ -1589,7 +1610,9 @@ namespace adept {
   template <typename Type, SymmMatrixOrientation Orient>
   SpecialMatrix<Type,SymmEngine<Orient>,false> 
   inv(const SpecialMatrix<Type,SymmEngine<Orient>,false>& A) {
-    throw feature_not_available("Cannot invert matrix because compiled without LAPACK");
+    //throw feature_not_available("Cannot invert matrix because compiled without LAPACK");
+    printf("feature not available\n");
+    assert(false);
   }
   
 }
@@ -1869,7 +1892,9 @@ namespace adept {
   Stack::jacobian_forward(Real* jacobian_out)
   {
     if (independent_index_.empty() || dependent_index_.empty()) {
-      throw(dependents_or_independents_not_identified());
+      //throw(dependents_or_independents_not_identified());
+      printf("dependents or independents not identified\n");
+      assert(false);
     }
 #ifdef _OPENMP
     if (have_openmp_ 
@@ -2089,7 +2114,9 @@ namespace adept {
   Stack::jacobian_reverse(Real* jacobian_out)
   {
     if (independent_index_.empty() || dependent_index_.empty()) {
-      throw(dependents_or_independents_not_identified());
+      //throw(dependents_or_independents_not_identified());
+      printf("dependents or independents not identified\n");
+      assert(false);
     }
 #ifdef _OPENMP
     if (have_openmp_ 
@@ -2509,7 +2536,9 @@ namespace adept {
     if (status != 0) {
       std::stringstream s;
       s << "Failed to solve general system of equations: LAPACK ?gesv returned code " << status;
-      throw(matrix_ill_conditioned(s.str() ADEPT_EXCEPTION_LOCATION));
+      //throw(matrix_ill_conditioned(s.str() ADEPT_EXCEPTION_LOCATION));
+      printf("matrix ill conditioned\n");
+      assert(false);
     }
     return b_;    
   }
@@ -2551,7 +2580,9 @@ namespace adept {
     if (status != 0) {
       std::stringstream s;
       s << "Failed to solve general system of equations for matrix RHS: LAPACK ?gesv returned code " << status;
-      throw(matrix_ill_conditioned(s.str() ADEPT_EXCEPTION_LOCATION));
+      //throw(matrix_ill_conditioned(s.str() ADEPT_EXCEPTION_LOCATION));
+      printf("matrix ill conditioned\n");
+      assert(false);
     }
     return B_;    
   }
@@ -2651,7 +2682,9 @@ namespace adept {
     if (status != 0) {
       std::stringstream s;
       s << "Failed to solve symmetric system of equations with matrix RHS: LAPACK ?sysv returned code " << status;
-      throw(matrix_ill_conditioned(s.str() ADEPT_EXCEPTION_LOCATION));
+      //throw(matrix_ill_conditioned(s.str() ADEPT_EXCEPTION_LOCATION));
+      printf("matrix ill conditioned\n");
+      assert(false);
     }
     return B_;
   }
@@ -2668,7 +2701,9 @@ namespace adept {
   template <typename T>
   Array<1,T,false> 
   solve(const Array<2,T,false>& A, const Array<1,T,false>& b) {
-    throw feature_not_available("Cannot solve linear equations because compiled without LAPACK");
+    //throw feature_not_available("Cannot solve linear equations because compiled without LAPACK");
+    printf("feature not available\n");
+    assert(false);
   }
 
   // -------------------------------------------------------------------
@@ -2677,7 +2712,9 @@ namespace adept {
   template <typename T>
   Array<2,T,false> 
   solve(const Array<2,T,false>& A, const Array<2,T,false>& B) {
-    throw feature_not_available("Cannot solve linear equations because compiled without LAPACK");
+    //throw feature_not_available("Cannot solve linear equations because compiled without LAPACK");
+    printf("feature not available\n");
+    assert(false);
   }
 
   // -------------------------------------------------------------------
@@ -2687,7 +2724,9 @@ namespace adept {
   Array<1,T,false>
   solve(const SpecialMatrix<T,SymmEngine<Orient>,false>& A,
 	const Array<1,T,false>& b) {
-    throw feature_not_available("Cannot solve linear equations because compiled without LAPACK");
+    //throw feature_not_available("Cannot solve linear equations because compiled without LAPACK");
+    printf("feature not available\n");
+    assert(false);
   }
 
   // -------------------------------------------------------------------
@@ -2697,7 +2736,9 @@ namespace adept {
   Array<2,T,false>
   solve(const SpecialMatrix<T,SymmEngine<Orient>,false>& A,
 	const Array<2,T,false>& B) {
-    throw feature_not_available("Cannot solve linear equations because compiled without LAPACK");
+    //throw feature_not_available("Cannot solve linear equations because compiled without LAPACK");
+    printf("feature not available\n");
+    assert(false);
   }
 
 }
@@ -2761,7 +2802,9 @@ namespace adept {
       return ans;
     }
     else if (n == 1) {
-      throw(invalid_operation("linspace(x1,x2,n) with n=1 only valid if x1=x2"));
+      //throw(invalid_operation("linspace(x1,x2,n) with n=1 only valid if x1=x2"));
+      printf("invalid operation\n");
+      assert(false);
     }
     return ans;
   }

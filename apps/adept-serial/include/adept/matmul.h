@@ -28,12 +28,16 @@ namespace adept {
     void
     check_inner_dimensions(const L& left, const R& right) {
       if (left.empty() || right.empty()) {
-	throw empty_array("Attempt to perform matrix multiplication with empty array(s)"
-			  ADEPT_EXCEPTION_LOCATION);
+	//throw empty_array("Attempt to perform matrix multiplication with empty array(s)"
+	//		  ADEPT_EXCEPTION_LOCATION);
+        printf("empty array\n");
+        assert(false);
       }
       if (left.dimension(1) != right.dimension(0)) {
-	throw inner_dimension_mismatch("Inner dimension mismatch in array multiplication"
-				       ADEPT_EXCEPTION_LOCATION);
+	//throw inner_dimension_mismatch("Inner dimension mismatch in array multiplication"
+	//			       ADEPT_EXCEPTION_LOCATION);
+        printf("inner dimension mismatch\n");
+        assert(false);
       }
     }
 
@@ -42,12 +46,16 @@ namespace adept {
     void
     check_inner_dimensions_sqr(Index left_dim, const R& right) {
       if (left_dim == 0 || right.empty()) {
-	throw empty_array("Attempt to perform matrix multiplication with empty array(s)"
-			  ADEPT_EXCEPTION_LOCATION);
+	//throw empty_array("Attempt to perform matrix multiplication with empty array(s)"
+	//		  ADEPT_EXCEPTION_LOCATION);
+        printf("empty array\n");
+        assert(false);
       }
       if (left_dim != right.dimension(0)) {
-	throw inner_dimension_mismatch("Inner dimension mismatch in array multiplication"
-				       ADEPT_EXCEPTION_LOCATION);
+	//throw inner_dimension_mismatch("Inner dimension mismatch in array multiplication"
+	//			       ADEPT_EXCEPTION_LOCATION);
+        printf("inner dimension mismatch\n");
+        assert(false);
       }
     }
 
@@ -222,7 +230,9 @@ namespace adept {
       check_inner_dimensions_sqr(left_dim, right);
 
       if (LIsActive || RIsActive) {
-	throw(invalid_operation("Cannot yet do matmul(SymmMatrix,Vector) when either are active"));
+	//throw(invalid_operation("Cannot yet do matmul(SymmMatrix,Vector) when either are active"));
+        printf("invalid operation\n");
+        assert(false);
       }
       BLAS_UPLO uplo;
       if (left_orient == ROW_LOWER_COL_UPPER) {
@@ -250,7 +260,9 @@ namespace adept {
       check_inner_dimensions_sqr(left_dim, right);
 
       if (LIsActive || RIsActive) {
-	throw(invalid_operation("Cannot yet do matmul(SymmMatrix,Matrix) when either are active"));
+	//throw(invalid_operation("Cannot yet do matmul(SymmMatrix,Matrix) when either are active"));
+        printf("invalid operation\n");
+        assert(false);
       }
       if (!right.is_row_contiguous() && !right.is_column_contiguous()) {
 	Array<2,T,RIsActive> right_;
@@ -298,7 +310,9 @@ namespace adept {
       check_inner_dimensions_sqr(left_dim, right);
 
       if (LIsActive) {
-	throw(invalid_operation("Cannot yet do matmul(BandMatrix,Vector) for active BandMatrix"));
+	//throw(invalid_operation("Cannot yet do matmul(BandMatrix,Vector) for active BandMatrix"));
+        printf("invalid operation\n");
+        assert(false);
       }
 
       BLAS_ORDER order;
@@ -368,7 +382,9 @@ namespace adept {
 		uIndex left_gradient_index, const Array<2,T,RIsActive>& right) {
       check_inner_dimensions_sqr(left_dim, right);
       if (LIsActive || RIsActive) {
-	throw(invalid_operation("Cannot yet do matmul(BandMatrix,Matrix) when either are active"));
+	//throw(invalid_operation("Cannot yet do matmul(BandMatrix,Matrix) when either are active"));
+        printf("invalid operation\n");
+        assert(false);
       }
       BLAS_ORDER order;
       // BLAS declares the start pointer to be in the "missing data"

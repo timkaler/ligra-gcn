@@ -48,8 +48,10 @@ namespace adept {
 	  // The template object size is not the same as a scalar,
 	  // indicating that dissimilar objects have been concatenated
 	  // in a row
-	  throw index_out_of_bounds("Scalar added to array with \"<<\" when previous objects on row were not scalar" 
-				    ADEPT_EXCEPTION_LOCATION);
+	  //throw index_out_of_bounds("Scalar added to array with \"<<\" when previous objects on row were not scalar" 
+	//			    ADEPT_EXCEPTION_LOCATION);
+          printf("index out of boudns\n");
+          assert(false);
 	}
 	// Add the scalar to the array and increment the final index
 	array_.get_lvalue(coords_) = x;
@@ -81,8 +83,10 @@ namespace adept {
 	  // The template object size is not the same as the current
 	  // array, indicating that dissimilar objects have been
 	  // concatenated in a row
-	  throw index_out_of_bounds("Expression added to array with \"<<\" does not match size of previous objects on row"
-				    ADEPT_EXCEPTION_LOCATION);
+	  //throw index_out_of_bounds("Expression added to array with \"<<\" does not match size of previous objects on row"
+	//			    ADEPT_EXCEPTION_LOCATION);
+          printf("index out of boudns\n");
+          assert(false);
 	}
 	// Add the object to the array and increment the final index
 	ExpressionSize<Rank> i_lhs(coords_);
@@ -128,8 +132,10 @@ namespace adept {
       template <int MyRank>
       typename enable_if<(MyRank <= 1), void>::type
       complete_row() {
-	throw index_out_of_bounds("Row overflow in filling Vector with \"<<\""
-				  ADEPT_EXCEPTION_LOCATION);
+	//throw index_out_of_bounds("Row overflow in filling Vector with \"<<\""
+	//			  ADEPT_EXCEPTION_LOCATION);
+        printf("index out of bounds\n");
+        assert(false);
       }
 
       // Multi-dimensional arrays: move to next row, checking which
@@ -150,8 +156,10 @@ namespace adept {
 	  --next_dim;
 	}
 	if (next_dim < 0) {
-	  throw index_out_of_bounds("Dimension overflow in filling array with \"<<\""
-				    ADEPT_EXCEPTION_LOCATION);
+	  //throw index_out_of_bounds("Dimension overflow in filling array with \"<<\""
+	//			    ADEPT_EXCEPTION_LOCATION);
+          printf("index out of bounds\n");
+          assert(false);
 	}
 	obj_size_.set_all(0);
       }
@@ -192,8 +200,10 @@ namespace adept {
   internal::Allocator<Rank,Array<Rank,T,IsActive> > 
   operator<<(Array<Rank,T,IsActive>& array, const E& x) {
     if (array.empty()) {
-      throw empty_array("Attempt to fill empty array with \"<<\""
-			ADEPT_EXCEPTION_LOCATION);
+      //throw empty_array("Attempt to fill empty array with \"<<\""
+//			ADEPT_EXCEPTION_LOCATION);
+      printf("empty array\n");
+      assert(false);
     }
     return internal::Allocator<Rank,Array<Rank,T,IsActive> >(array, x);
   }

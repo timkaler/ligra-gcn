@@ -37,6 +37,9 @@
 static int getWorkers() {
   return __cilkrts_get_nworkers();
 }
+static int getWorkerNum() {
+  return __cilkrts_get_worker_number();
+}
 static void setWorkers(int n) {
   __cilkrts_end_cilk();
   //__cilkrts_init();
@@ -82,7 +85,9 @@ static void setWorkers(int n) {
 #define parallel_for_256 _Pragma("omp parallel for schedule (static,256)") for
 static int getWorkers() { return omp_get_max_threads(); }
 static void setWorkers(int n) { omp_set_num_threads(n); }
-
+static int getWorkerNum() {
+  return omp_get_thread_num();
+}
 // c++
 #else
 #define cilk_spawn
@@ -95,6 +100,9 @@ static void setWorkers(int n) { omp_set_num_threads(n); }
 static int getWorkers() { return 1; }
 static void setWorkers(int n) { }
 
+static int getWorkerNum() {
+  return 0;
+}
 #endif
 
 #include <limits.h>

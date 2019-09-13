@@ -493,7 +493,9 @@ namespace adept {
 #if _POSIX_VERSION >= 200112L
 	if (posix_memalign(reinterpret_cast<void**>(&result), 
 			   n_align, n*sizeof(Type)) != 0) {
-	  throw std::bad_alloc();
+	  //throw std::bad_alloc();
+          printf("bad alloc\n");
+          assert(false);
 	}
 #else
 	result = new Type[n];
@@ -502,7 +504,9 @@ namespace adept {
 	result = reinterpret_cast<Type*>(_aligned_malloc(n*sizeof(Type),
 							 n_align));
 	if (result == 0) {
-	  throw std::bad_alloc();
+	  //throw std::bad_alloc();
+          printf("bad alloc\n");
+          assert(false);
 	}
 #else
 	result = new Type[n];	

@@ -117,12 +117,16 @@ namespace adept {
     inline
     Index get_value_with_len(const Index& ind, const Index& j, const Index& len)   { 
       if (j != 0) {
-	throw index_out_of_bounds("Index to IndexedArray is out of bounds"
-				  ADEPT_EXCEPTION_LOCATION);
+	//throw index_out_of_bounds("Index to IndexedArray is out of bounds"
+	//			  ADEPT_EXCEPTION_LOCATION);
+        printf("index out of bounds\n");
+        assert(false);
       }
       else if (ind < 0 || ind >= len) {
-	throw index_out_of_bounds("Scalar index out of bounds in IndexedArray"
-				  ADEPT_EXCEPTION_LOCATION);
+	//throw index_out_of_bounds("Scalar index out of bounds in IndexedArray"
+	//			  ADEPT_EXCEPTION_LOCATION);
+        printf("index out of bounds\n");
+        assert(false);
       }
       else {
 	return ind; 
@@ -138,8 +142,10 @@ namespace adept {
       Index i = ind.value_with_len(j, len);
       if (i < 0 || i >= len) {
 	abort();
-	throw index_out_of_bounds("Index out of bounds in IndexedArray"
-				  ADEPT_EXCEPTION_LOCATION);
+	//throw index_out_of_bounds("Index out of bounds in IndexedArray"
+	//			  ADEPT_EXCEPTION_LOCATION);
+        printf("index out of bounds\n");
+        assert(false);
       }
       else {
 	return i;
@@ -152,8 +158,10 @@ namespace adept {
 			     const Index& len) {
       Index i = ind[j];
       if (i < 0 || i >= len) {
-	throw index_out_of_bounds("Index from std::vector out of bounds in IndexedArray"
-				  ADEPT_EXCEPTION_LOCATION);
+	//throw index_out_of_bounds("Index from std::vector out of bounds in IndexedArray"
+	//			  ADEPT_EXCEPTION_LOCATION);
+        printf("index out of boudns\n");
+        assert(false);
       }
       else {
 	return i;
@@ -472,12 +480,17 @@ namespace adept {
 	if (!rhs.get_dimensions(dims)) {
 	  std::string str = "Array size mismatch in "
 	    + rhs.expression_string() + ".";
-	  throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+	  //throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+          printf("size mismatch\n");
+          assert(false);
 	}
+
 	else if (!compatible(dims, dimensions_)) {
 	  std::string str = "Expr";
 	  str += dims.str() + " object assigned to " + expression_string_();
-	  throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+	  //throw size_mismatch(str ADEPT_EXCEPTION_LOCATION);
+          printf("size mismatch\n");
+          assert(false);
 	}
 
 	if (!empty()) {

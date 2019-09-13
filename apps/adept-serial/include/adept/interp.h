@@ -24,7 +24,9 @@ namespace adept {
     int length = xi.size();
     Array<1,YType,YIsActive> ans(length);
     if (x.size() != y.size()) {
-      throw(size_mismatch("Interpolation vectors must be the same length in interp"));
+      //throw(size_mismatch("Interpolation vectors must be the same length in interp"));
+      printf("size mismatch\n");
+      assert(false);
     }
 
     if (x(0) < x(1)) {
@@ -118,7 +120,9 @@ namespace adept {
     int length = xi.size();
     Array<1,YType,YIsActive> ans(length);
     if (x.size() != y.size()) {
-      throw(size_mismatch("Interpolation vectors must be the same length in log_interp"));
+      //throw(size_mismatch("Interpolation vectors must be the same length in log_interp"));
+      printf("size mismatch\n");
+      assert(false);
     }
 
     if (x(0) < x(1)) {

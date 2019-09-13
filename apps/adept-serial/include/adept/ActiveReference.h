@@ -344,8 +344,10 @@ namespace adept {
 	  }
 	}
 	if (!(ADEPT_ACTIVE_STACK->update_lhs(gradient_index_))) {
-	  throw wrong_gradient("Wrong gradient: append_derivative_dependence called on a different aReal object from the most recent add_derivative_dependence call"
-			       ADEPT_EXCEPTION_LOCATION);
+	  //throw wrong_gradient("Wrong gradient: append_derivative_dependence called on a different aReal object from the most recent add_derivative_dependence call"
+	//		       ADEPT_EXCEPTION_LOCATION);
+          printf("wrong gradient\n");
+          assert(false);
 	}
 #ifdef ADEPT_RECORDING_PAUSABLE
       }

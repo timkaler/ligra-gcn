@@ -108,8 +108,10 @@ namespace adept {
     // n_links_ atomic
     void remove_link() {
       if (n_links_ == 0) {
-	throw invalid_operation("Attempt to remove more links to a storage object than set"
-				ADEPT_EXCEPTION_LOCATION);
+	//throw invalid_operation("Attempt to remove more links to a storage object than set"
+	//			ADEPT_EXCEPTION_LOCATION);
+        printf("invalid operation\n");
+        assert(false);
       }
       else if (--n_links_ == 0) {
 	delete this;
