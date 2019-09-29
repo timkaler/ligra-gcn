@@ -40,6 +40,8 @@ double PARAM_ADAM_B1 = 0.9;
 double PARAM_ADAM_B2 = 0.999;
 double PARAM_ADAM_EPSILON = 1e-8;
 
+static int64_t tfk_debug_counter = 0;
+
 
 /*
 	Utility Functions
@@ -94,6 +96,7 @@ void apply_gradient_update_ADAM(std::vector<MatrixXf>& weights, std::vector<Matr
 
 #include "gradient_table_reducer.cpp"
 
+#include "FastGCNUtils.C"
 
 /*
 	Functions/Operations plus functions to propagate their adjoints backwards.
@@ -160,7 +163,7 @@ struct GCN_applyweights_F {
 
   inline bool operator() (uintE v) {
     int in_degree = GA.V[v].getOutDegree();
-    if (in_degree == 0) return 1;
+    //if (in_degree == 0) return 1;
     uintE n = v;
     next_vertex_embeddings[v] = (weights * prev_vertex_embeddings[n]);
     return 1;
@@ -200,7 +203,7 @@ struct d_GCN_applyweights_F {
 
   inline bool operator() (uintE v) {
     int in_degree = GA.V[v].getOutDegree();
-    if (in_degree == 0) return 1;
+    //if (in_degree == 0) return 1;
     ArrayReducerView* view = reducer->view();
     MatrixXf& d_weights_view = *(view->get_view(d_weights));
     uintE n = v;
@@ -249,13 +252,22 @@ struct GCN_edgeMap_F {
                                           prevprev_vertex_embeddings(_prevprev_vertex_embeddings),
                                           first(_first) {}
 
-  inline bool update(uintE v, uintE n) {
-    int in_degree = GA.V[v].getOutDegree();
+  inline bool update(uintE n, uintE v) {
+    return updateAtomic(n,v);
+  }
 
+  inline bool _update(uintE n, uintE v) {
+    int in_degree = GA.V[v].getOutDegree();
+    //printf("update!\n");
     // self edge
-    if (v == n) {
-      next_vertex_embeddings[v] += skip_weights * prevprev_vertex_embeddings[n];
+    //if (v == n) {
+      //printf("self edge %d,%d\n", v,n);
+    {
+      double skip_edge_weight = 1.0 / GA.V[v].getInDegree();
+      next_vertex_embeddings[v] += skip_weights * prevprev_vertex_embeddings[v] * skip_edge_weight;
     }
+      //return 1;
+    //}
 
     //printf("edge seen %d,%d\n", v,n);
     //if (GA.V[v].getOutDegree() != GA.V[v].getInDegree()) printf("Error in and out degrees do not match!\n");
@@ -268,6 +280,7 @@ struct GCN_edgeMap_F {
 
     double edge_weight = 1.0 / sqrt(in_degree * GA.V[n].getOutDegree());
     next_vertex_embeddings[v] += prev_vertex_embeddings[n] * edge_weight;
+    //next_vertex_embeddings[n] += prev_vertex_embeddings[v] * edge_weight;
 
     //if (!first) {
     //  next_vertex_embeddings[v] = next_vertex_embeddings[v].cwiseMax(0.0);
@@ -276,8 +289,15 @@ struct GCN_edgeMap_F {
     return 1;
   }
 
-  inline bool updateAtomic(uintE v, uintE n) {
-    return update(v,n);
+  inline bool updateAtomic(uintE n, uintE v) {
+    //printf("update atomic\n");
+    while (!__sync_bool_compare_and_swap(&Parents[v], UINT_E_MAX, 0)) {
+      //if (Parents[d] == 0) break;
+      continue;
+    }
+    bool ret = _update(n,v);
+    __sync_bool_compare_and_swap(&Parents[v], 0, UINT_E_MAX);
+    return ret;//update(v,n);
   }
 
   inline bool cond(uintE n) {
@@ -326,7 +346,7 @@ struct d_GCN_edgeMap_F {
             d_prevprev_vertex_embeddings(_d_prevprev_vertex_embeddings), reducer(_reducer),
             first(_first) {}
 
-  inline bool update(uintE v, uintE n) {
+  inline bool update(uintE n, uintE v) {
     int in_degree = GA.V[v].getOutDegree();
 
     // reverse-mode of fmax(0.0, next_vertex_embeddings[v]).
@@ -341,21 +361,23 @@ struct d_GCN_edgeMap_F {
     MatrixXf& d_skip_weights_view = *(view->get_view(d_skip_weights));
 
     // self edge.
-    if (v == n) {
+    /*if (v == n)*/
+    {
+      double skip_edge_weight = 1.0 / GA.V[v].getInDegree();
+      for (int j = 0; j < weights.rows(); j++) {
+        if (d_next_vertex_embeddings[v](j,0) == 0.0) continue;
+        for (int k = 0; k < weights.cols(); k++) {
+          d_skip_weights_view(j,k) += prevprev_vertex_embeddings[v](k,0) * d_next_vertex_embeddings[v](j,0) * skip_edge_weight;
+        }
+      }
+      MatrixXf& d_prevprev_vertex_embeddings_v = *(view->get_view(&(d_prevprev_vertex_embeddings[v])));
+      for (int j = 0; j < weights.rows(); j++) {
+        if (d_next_vertex_embeddings[v](j,0) == 0.0) continue;
+        for (int k = 0; k < weights.cols(); k++) {
+          d_prevprev_vertex_embeddings_v(k,0) += skip_weights(j,k) * d_next_vertex_embeddings[v](j,0)* skip_edge_weight;
+        }
+      }
       //return 1;
-      for (int j = 0; j < weights.rows(); j++) {
-        if (d_next_vertex_embeddings[v](j,0) == 0.0) continue;
-        for (int k = 0; k < weights.cols(); k++) {
-          d_skip_weights_view(j,k) += prevprev_vertex_embeddings[n](k,0) * d_next_vertex_embeddings[v](j,0);
-        }
-      }
-      MatrixXf& d_prevprev_vertex_embeddings_n = *(view->get_view(&(d_prevprev_vertex_embeddings[n])));
-      for (int j = 0; j < weights.rows(); j++) {
-        if (d_next_vertex_embeddings[v](j,0) == 0.0) continue;
-        for (int k = 0; k < weights.cols(); k++) {
-          d_prevprev_vertex_embeddings_n(k,0) += skip_weights(j,k) * d_next_vertex_embeddings[v](j,0);
-        }
-      }
     }
 
     //printf("edge map %d,%d\n", v, n);
@@ -363,12 +385,14 @@ struct d_GCN_edgeMap_F {
     double edge_weight = 1.0/sqrt(in_degree * GA.V[n].getOutDegree());
 
     MatrixXf& d_prev_vertex_embeddings_n = *(view->get_view(&(d_prev_vertex_embeddings[n])));
+    //MatrixXf& d_prev_vertex_embeddings_v = *(view->get_view(&(d_prev_vertex_embeddings[v])));
     // propagate to d_prev_vertex_embeddings[n]
     d_prev_vertex_embeddings_n += d_next_vertex_embeddings[v]*edge_weight;
+    //d_prev_vertex_embeddings_v += d_next_vertex_embeddings[n]*edge_weight;
     return 1;
   }
-  inline bool updateAtomic(uintE v, uintE n) {
-    return update(v,n);
+  inline bool updateAtomic(uintE n, uintE v) {
+    return 1;//update(v,n);
   }
 
   inline bool cond(uintE n) {
@@ -485,13 +509,13 @@ struct d_GCN_F {
     int in_degree = GA.V[v].getOutDegree();
 
     // reverse-mode of fmax(0.0, next_vertex_embeddings[v]).
-    if (!first) {
-      for (int i = 0; i < next_vertex_embeddings[v].rows(); i++) {
-        if (next_vertex_embeddings[v](i,0) <= 0.0) {
-          d_next_vertex_embeddings[v](i,0) = 0.0;
-        }
-      }
-    }
+    //if (!first) {
+    //  for (int i = 0; i < next_vertex_embeddings[v].rows(); i++) {
+    //    if (next_vertex_embeddings[v](i,0) <= 0.0) {
+    //      d_next_vertex_embeddings[v](i,0) = 0.0;
+    //    }
+    //  }
+    //}
 
     ArrayReducerView* view = reducer->view();
     MatrixXf& d_skip_weights_view = *(view->get_view(d_skip_weights));
@@ -539,7 +563,7 @@ void Compute(graph<vertex>& GA, commandLine P) {
   //creates Parents array, initialized to all -1, except for start
   uintE* Parents = newA(uintE,n);
   parallel_for(long i=0;i<n;i++) Parents[i] = UINT_E_MAX;
-  Parents[start] = start;
+  //Parents[start] = start;
 
   bool* vIndices = static_cast<bool*>(malloc(sizeof(bool)*GA.n));
 
@@ -608,7 +632,7 @@ void Compute(graph<vertex>& GA, commandLine P) {
   }
   vertexSubset Frontier(n, n, vIndices); //creates initial frontier
 
-  for (int iter = 0; iter < 30; iter++) {
+  for (int iter = 0; iter < 300; iter++) {
     std::vector<MatrixXf*> embedding_list, d_embedding_list, pre_embedding_list, d_pre_embedding_list;
     embedding_list.push_back(&(feature_vectors[0]));
     for (int i = 0; i < gcn_embedding_dimensions.size(); i++) {
@@ -639,8 +663,15 @@ void Compute(graph<vertex>& GA, commandLine P) {
       //vertexMap(Frontier, GCN_F<vertex>(Parents, GA, weights, skip_weights, next_vertex_embeddings,
       //                                  pre_embedding_list[i], prev_vertex_embeddings, first));
 
+      //if (!first) {
+      //}
+
       edgeMap(GA, Frontier, GCN_edgeMap_F<vertex>(Parents, GA, weights, skip_weights, next_vertex_embeddings,
-                                        pre_embedding_list[i], prev_vertex_embeddings, first));
+                                        pre_embedding_list[i], prev_vertex_embeddings, first), remove_duplicates);
+      if (!first) {
+        vertexMap(Frontier, GCN_vertexRELU_F<vertex>(Parents, GA, weights,
+                                                     next_vertex_embeddings, next_vertex_embeddings));
+      }
     }
 
     MatrixXf* final_vertex_embeddings = new MatrixXf[GA.n];
@@ -739,18 +770,26 @@ void Compute(graph<vertex>& GA, commandLine P) {
 
       ArrayReducer reducer;
 
+      if (!first) {
+      vertexMap(Frontier, d_GCN_vertexRELU_F<vertex>(Parents, GA, weights, d_weights,
+                                          next_vertex_embeddings, d_next_vertex_embeddings,
+                                          next_vertex_embeddings, d_next_vertex_embeddings,
+                                          &reducer));
+      }
       //vertexMap(Frontier, d_GCN_F<vertex>(Parents, GA, weights, d_weights,
       //                                    skip_weights, d_skip_weights,
       //                                    next_vertex_embeddings, d_next_vertex_embeddings,
       //                                    pre_embedding_list[i], d_pre_embedding_list[i],
       //                                    prev_vertex_embeddings, d_prev_vertex_embeddings,
       //                                    &reducer, first));
+
       edgeMap(GA, Frontier, d_GCN_edgeMap_F<vertex>(Parents, GA, weights, d_weights,
                                           skip_weights, d_skip_weights,
                                           next_vertex_embeddings, d_next_vertex_embeddings,
                                           pre_embedding_list[i], d_pre_embedding_list[i],
                                           prev_vertex_embeddings, d_prev_vertex_embeddings,
                                           &reducer, first), remove_duplicates);
+
 
       reducer.combine();
       {
