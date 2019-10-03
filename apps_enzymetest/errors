@@ -1,0 +1,814 @@
+clang-6.0: warning: -lcilkrts: 'linker' input unused [-Wunused-command-line-argument]
+clang-6.0: warning: -lblas: 'linker' input unused [-Wunused-command-line-argument]
+clang-6.0: warning: -lprofiler: 'linker' input unused [-Wunused-command-line-argument]
+In file included from GCN.C:21:
+./adept-serial/include/adept_source.h:46:2: warning: "The adept_source.h header file has not been edited so BLAS matrix multiplication and LAPACK linear-algebra support have been disabled" [-W#warnings]
+#warning "The adept_source.h header file has not been edited so BLAS matrix multiplication and LAPACK linear-algebra support have been disabled"
+ ^
+GCN.C:102:60: warning: GCC does not allow 'noinline' attribute in this position on a function definition [-Wgcc-compat]
+void softmax(Matrix& input, Matrix& output) __attribute__((noinline)) {
+                                                           ^
+In file included from GCN.C:19:
+In file included from ./ligra.h:34:
+./utils.h:453:7: warning: Tapir loop not transformed: failed to use divide-and-conquer loop spawning [-Wpass-failed=loop-spawning-ti]
+      parallel_for (size_t i = 0; i < bytes; i = i + (1 << 21))
+      ^
+3 warnings generated.
+ place foo
+<begin dump>
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %22) #3, !dbg !9130
+  %27 = getelementptr inbounds %"struct.adept::internal::UnaryOperation", %"struct.adept::internal::UnaryOperation"* %8, i64 0, i32 0, !dbg !9130
+  %29 = call float @_ZN5adept3sumIfNS_8internal14UnaryOperationIfNS1_3ExpENS1_19BinaryOpScalarRightIfNS_5ArrayILi2EfLb0EEENS1_8SubtractEfEEEEEENS1_9enable_ifIXaantsrT0_9is_activenesrSB_4rankLi0EET_E4typeERKNS_10ExpressionISC_SB_EE(%"struct.adept::Expression.43"* nonnull dereferenceable(1) %28), !dbg !9129
+  call void @llvm.lifetime.start.p0i8(i64 32, i8* nonnull %23) #3, !dbg !9131
+  %25 = call %"struct.adept::internal::BinaryOpScalarRight.44"* @_ZN5adept3expIfNS_8internal19BinaryOpScalarRightIfNS_5ArrayILi2EfLb0EEENS1_8SubtractEfEEEENS1_14UnaryOperationIT_NS1_3ExpET0_EERKNS_10ExpressionIS8_SA_EE(%"struct.adept::Expression.45"* nonnull dereferenceable(1) %24), !dbg !9130
+  call void @llvm.dbg.value(metadata %"class.adept::Array"* %1, metadata !66468, metadata !DIExpression()), !dbg !66471
+  store %"struct.adept::internal::BinaryOpScalarRight.44"* %25, %"struct.adept::internal::BinaryOpScalarRight.44"** %27, align 8, !dbg !9130
+  %17 = call %"struct.adept::internal::BinaryOpScalarRight.44"* @_ZN5adept3expIfNS_8internal19BinaryOpScalarRightIfNS_5ArrayILi2EfLb0EEENS1_8SubtractEfEEEENS1_14UnaryOperationIT_NS1_3ExpET0_EERKNS_10ExpressionIS8_SA_EE(%"struct.adept::Expression.45"* nonnull dereferenceable(1) %16), !dbg !9126
+  %23 = bitcast %"struct.adept::internal::BinaryOpScalarRight.44"* %9 to i8*, !dbg !9131
+  %28 = bitcast %"struct.adept::internal::UnaryOperation"* %8 to %"struct.adept::Expression.43"*, !dbg !9130
+  %31 = call dereferenceable(32) %"class.adept::Array"* @_ZN5adept5ArrayILi2EfLb0EEaSIfNS_8internal19BinaryOpScalarRightIfNS3_14UnaryOperationIfNS3_3ExpENS4_IfS1_NS3_8SubtractEfEEEENS3_8MultiplyEfEEEENS3_9enable_ifIXeqsrT0_4rankLi2EERS1_E4typeERKNS_10ExpressionIT_SD_EE(%"class.adept::Array"* %1, %"struct.adept::Expression.42"* nonnull dereferenceable(1) %30), !dbg !9134
+  %24 = bitcast %"struct.adept::internal::BinaryOpScalarRight.44"* %9 to %"struct.adept::Expression.45"*, !dbg !9131
+  store float %29, float* %7, align 4, !dbg !9129, !tbaa !9122
+  %12 = tail call float @_ZN5adept6maxvalIfNS_5ArrayILi2EfLb0EEEEENS_8internal9enable_ifIXaantsrT0_9is_activenesrS5_4rankLi0EET_E4typeERKNS_10ExpressionIS6_S5_EE(%"struct.adept::Expression.11"* dereferenceable(1) %11), !dbg !9120
+  call void @llvm.dbg.value(metadata %"class.adept::Array"* %0, metadata !66467, metadata !DIExpression()), !dbg !66470
+  %30 = bitcast %"struct.adept::internal::BinaryOpScalarRight"* %4 to %"struct.adept::Expression.42"*, !dbg !9126
+  store float %12, float* %3, align 4, !dbg !9121, !tbaa !9122
+  call void @llvm.dbg.value(metadata float %12, metadata !66469, metadata !DIExpression()), !dbg !66475
+  store %"struct.adept::internal::BinaryOpScalarRight.44"* %17, %"struct.adept::internal::BinaryOpScalarRight.44"** %19, align 8, !dbg !9126
+  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %10) #3, !dbg !9118
+  %3 = alloca float, align 4
+  %13 = bitcast %"struct.adept::internal::BinaryOpScalarRight"* %4 to i8*, !dbg !9126
+  %14 = bitcast %"struct.adept::internal::UnaryOperation"* %5 to i8*, !dbg !9126
+  %15 = bitcast %"struct.adept::internal::BinaryOpScalarRight.44"* %6 to i8*, !dbg !9127
+  %16 = bitcast %"struct.adept::internal::BinaryOpScalarRight.44"* %6 to %"struct.adept::Expression.45"*, !dbg !9127
+  call void @llvm.dbg.value(metadata float* %3, metadata !66469, metadata !DIExpression()), !dbg !66475
+  call void @_ZN5adeptmiINS_5ArrayILi2EfLb0EEEfEENS_8internal9enable_ifIXsr8internal17is_not_expressionIT0_EE5valueENS3_19BinaryOpScalarRightINS3_7promoteINT_4typeES5_E4typeES8_NS3_8SubtractES5_EEE4typeERKNS_10ExpressionIS9_S8_EERKS5_(%"struct.adept::internal::BinaryOpScalarRight.44"* nonnull sret %6, %"struct.adept::Expression.11"* nonnull dereferenceable(1) %11, float* nonnull dereferenceable(4) %3), !dbg !9128
+  %5 = alloca %"struct.adept::internal::UnaryOperation", align 8
+  %20 = bitcast %"struct.adept::internal::UnaryOperation"* %5 to %"struct.adept::Expression.43"*, !dbg !9126
+  call void @llvm.lifetime.start.p0i8(i64 32, i8* nonnull %13) #3, !dbg !9126
+  %4 = alloca %"struct.adept::internal::BinaryOpScalarRight", align 16
+  %21 = bitcast float* %7 to i8*, !dbg !9129
+  %22 = bitcast %"struct.adept::internal::UnaryOperation"* %8 to i8*, !dbg !9130
+  %8 = alloca %"struct.adept::internal::UnaryOperation", align 8
+  call void @llvm.lifetime.start.p0i8(i64 32, i8* nonnull %15) #3, !dbg !9127
+  %7 = alloca float, align 4
+  call void @llvm.dbg.value(metadata float* %3, metadata !66469, metadata !DIExpression()), !dbg !66475
+  call void @_ZN5adeptmiINS_5ArrayILi2EfLb0EEEfEENS_8internal9enable_ifIXsr8internal17is_not_expressionIT0_EE5valueENS3_19BinaryOpScalarRightINS3_7promoteINT_4typeES5_E4typeES8_NS3_8SubtractES5_EEE4typeERKNS_10ExpressionIS9_S8_EERKS5_(%"struct.adept::internal::BinaryOpScalarRight.44"* nonnull sret %9, %"struct.adept::Expression.11"* nonnull dereferenceable(1) %11, float* nonnull dereferenceable(4) %3), !dbg !9132
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %14) #3, !dbg !9126
+  %6 = alloca %"struct.adept::internal::BinaryOpScalarRight.44", align 16
+  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %21) #3, !dbg !9129
+  %10 = bitcast float* %3 to i8*, !dbg !9118
+  %11 = bitcast %"class.adept::Array"* %0 to %"struct.adept::Expression.11"*, !dbg !9119
+  %19 = getelementptr inbounds %"struct.adept::internal::UnaryOperation", %"struct.adept::internal::UnaryOperation"* %5, i64 0, i32 0, !dbg !9126
+  %9 = alloca %"struct.adept::internal::BinaryOpScalarRight.44", align 16
+  call void @_ZN5adeptdvINS_8internal14UnaryOperationIfNS1_3ExpENS1_19BinaryOpScalarRightIfNS_5ArrayILi2EfLb0EEENS1_8SubtractEfEEEEfEENS1_9enable_ifIXaasr8internal17is_not_expressionIT0_EE5valuesr17is_floating_pointISB_EE5valueENS4_INS1_7promoteINT_4typeESB_E4typeESD_NS1_8MultiplyESG_EEE4typeERKNS_10ExpressionISE_SD_EERKSB_(%"struct.adept::internal::BinaryOpScalarRight"* nonnull sret %4, %"struct.adept::Expression.43"* nonnull dereferenceable(1) %20, float* nonnull dereferenceable(4) %7), !dbg !9133
+</end dump>
+ place foo
+<begin dump>
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %23) #3, !dbg !9130
+  %28 = getelementptr inbounds %"struct.adept::internal::UnaryOperation", %"struct.adept::internal::UnaryOperation"* %9, i64 0, i32 0, !dbg !9130
+  %30 = call float @_ZN5adept3sumIfNS_8internal14UnaryOperationIfNS1_3ExpENS1_19BinaryOpScalarRightIfNS_5ArrayILi2EfLb0EEENS1_8SubtractEfEEEEEENS1_9enable_ifIXaantsrT0_9is_activenesrSB_4rankLi0EET_E4typeERKNS_10ExpressionISC_SB_EE(%"struct.adept::Expression.43"* nonnull dereferenceable(1) %29), !dbg !9129
+  call void @llvm.lifetime.start.p0i8(i64 32, i8* nonnull %24) #3, !dbg !9131
+  %26 = call %"struct.adept::internal::BinaryOpScalarRight.44"* @_ZN5adept3expIfNS_8internal19BinaryOpScalarRightIfNS_5ArrayILi2EfLb0EEENS1_8SubtractEfEEEENS1_14UnaryOperationIT_NS1_3ExpET0_EERKNS_10ExpressionIS8_SA_EE(%"struct.adept::Expression.45"* nonnull dereferenceable(1) %25), !dbg !9130
+  call void @llvm.dbg.value(metadata %"class.adept::Array"* %1, metadata !66468, metadata !DIExpression()), !dbg !66471
+  store %"struct.adept::internal::BinaryOpScalarRight.44"* %26, %"struct.adept::internal::BinaryOpScalarRight.44"** %28, align 8, !dbg !9130
+  %18 = call %"struct.adept::internal::BinaryOpScalarRight.44"* @_ZN5adept3expIfNS_8internal19BinaryOpScalarRightIfNS_5ArrayILi2EfLb0EEENS1_8SubtractEfEEEENS1_14UnaryOperationIT_NS1_3ExpET0_EERKNS_10ExpressionIS8_SA_EE(%"struct.adept::Expression.45"* nonnull dereferenceable(1) %17), !dbg !9126
+  %24 = bitcast %"struct.adept::internal::BinaryOpScalarRight.44"* %10 to i8*, !dbg !9131
+  %29 = bitcast %"struct.adept::internal::UnaryOperation"* %9 to %"struct.adept::Expression.43"*, !dbg !9130
+  %32 = call dereferenceable(32) %"class.adept::Array"* @_ZN5adept5ArrayILi2EfLb0EEaSIfNS_8internal19BinaryOpScalarRightIfNS3_14UnaryOperationIfNS3_3ExpENS4_IfS1_NS3_8SubtractEfEEEENS3_8MultiplyEfEEEENS3_9enable_ifIXeqsrT0_4rankLi2EERS1_E4typeERKNS_10ExpressionIT_SD_EE(%"class.adept::Array"* %1, %"struct.adept::Expression.42"* nonnull dereferenceable(1) %31), !dbg !9134
+  %25 = bitcast %"struct.adept::internal::BinaryOpScalarRight.44"* %10 to %"struct.adept::Expression.45"*, !dbg !9131
+  store float %30, float* %8, align 4, !dbg !9129, !tbaa !9122
+  %13 = tail call float @_ZN5adept6maxvalIfNS_5ArrayILi2EfLb0EEEEENS_8internal9enable_ifIXaantsrT0_9is_activenesrS5_4rankLi0EET_E4typeERKNS_10ExpressionIS6_S5_EE(%"struct.adept::Expression.11"* dereferenceable(1) %12), !dbg !9120
+  call void @llvm.dbg.value(metadata %"class.adept::Array"* %0, metadata !66467, metadata !DIExpression()), !dbg !66470
+  %31 = bitcast %"struct.adept::internal::BinaryOpScalarRight"* %5 to %"struct.adept::Expression.42"*, !dbg !9126
+  store float %13, float* %3, align 4, !dbg !9121, !tbaa !9122
+  call void @llvm.dbg.value(metadata float %13, metadata !66469, metadata !DIExpression()), !dbg !66475
+  store %"struct.adept::internal::BinaryOpScalarRight.44"* %18, %"struct.adept::internal::BinaryOpScalarRight.44"** %20, align 8, !dbg !9126
+  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %11) #3, !dbg !9118
+  %3 = alloca float, align 4
+  %14 = bitcast %"struct.adept::internal::BinaryOpScalarRight"* %5 to i8*, !dbg !9126
+  %15 = bitcast %"struct.adept::internal::UnaryOperation"* %6 to i8*, !dbg !9126
+  %16 = bitcast %"struct.adept::internal::BinaryOpScalarRight.44"* %7 to i8*, !dbg !9127
+  %17 = bitcast %"struct.adept::internal::BinaryOpScalarRight.44"* %7 to %"struct.adept::Expression.45"*, !dbg !9127
+  call void @llvm.dbg.value(metadata float* %3, metadata !66469, metadata !DIExpression()), !dbg !66475
+  call void @_ZN5adeptmiINS_5ArrayILi2EfLb0EEEfEENS_8internal9enable_ifIXsr8internal17is_not_expressionIT0_EE5valueENS3_19BinaryOpScalarRightINS3_7promoteINT_4typeES5_E4typeES8_NS3_8SubtractES5_EEE4typeERKNS_10ExpressionIS9_S8_EERKS5_(%"struct.adept::internal::BinaryOpScalarRight.44"* nonnull sret %7, %"struct.adept::Expression.11"* nonnull dereferenceable(1) %12, float* nonnull dereferenceable(4) %3), !dbg !9128
+  %6 = alloca %"struct.adept::internal::UnaryOperation", align 8
+  %21 = bitcast %"struct.adept::internal::UnaryOperation"* %6 to %"struct.adept::Expression.43"*, !dbg !9126
+  call void @llvm.lifetime.start.p0i8(i64 32, i8* nonnull %14) #3, !dbg !9126
+  %5 = alloca %"struct.adept::internal::BinaryOpScalarRight", align 16
+  %22 = bitcast float* %8 to i8*, !dbg !9129
+  %23 = bitcast %"struct.adept::internal::UnaryOperation"* %9 to i8*, !dbg !9130
+  %9 = alloca %"struct.adept::internal::UnaryOperation", align 8
+  call void @llvm.lifetime.start.p0i8(i64 32, i8* nonnull %16) #3, !dbg !9127
+  %8 = alloca float, align 4
+  call void @llvm.dbg.value(metadata float* %3, metadata !66469, metadata !DIExpression()), !dbg !66475
+  call void @_ZN5adeptmiINS_5ArrayILi2EfLb0EEEfEENS_8internal9enable_ifIXsr8internal17is_not_expressionIT0_EE5valueENS3_19BinaryOpScalarRightINS3_7promoteINT_4typeES5_E4typeES8_NS3_8SubtractES5_EEE4typeERKNS_10ExpressionIS9_S8_EERKS5_(%"struct.adept::internal::BinaryOpScalarRight.44"* nonnull sret %10, %"struct.adept::Expression.11"* nonnull dereferenceable(1) %12, float* nonnull dereferenceable(4) %3), !dbg !9132
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %15) #3, !dbg !9126
+  %7 = alloca %"struct.adept::internal::BinaryOpScalarRight.44", align 16
+  call void @llvm.lifetime.start.p0i8(i64 4, i8* nonnull %22) #3, !dbg !9129
+  %11 = bitcast float* %3 to i8*, !dbg !9118
+  %12 = bitcast %"class.adept::Array"* %0 to %"struct.adept::Expression.11"*, !dbg !9119
+  %20 = getelementptr inbounds %"struct.adept::internal::UnaryOperation", %"struct.adept::internal::UnaryOperation"* %6, i64 0, i32 0, !dbg !9126
+  %10 = alloca %"struct.adept::internal::BinaryOpScalarRight.44", align 16
+  call void @_ZN5adeptdvINS_8internal14UnaryOperationIfNS1_3ExpENS1_19BinaryOpScalarRightIfNS_5ArrayILi2EfLb0EEENS1_8SubtractEfEEEEfEENS1_9enable_ifIXaasr8internal17is_not_expressionIT0_EE5valuesr17is_floating_pointISB_EE5valueENS4_INS1_7promoteINT_4typeESB_E4typeESD_NS1_8MultiplyESG_EEE4typeERKNS_10ExpressionISE_SD_EERKSB_(%"struct.adept::internal::BinaryOpScalarRight"* nonnull sret %5, %"struct.adept::Expression.43"* nonnull dereferenceable(1) %21, float* nonnull dereferenceable(4) %8), !dbg !9133
+</end dump>
+ choosing to replace function _ZN5adept5ArrayILi2EfLb0EEaSIfNS_8internal19BinaryOpScalarRightIfNS3_14UnaryOperationIfNS3_3ExpENS4_IfS1_NS3_8SubtractEfEEEENS3_8MultiplyEfEEEENS3_9enable_ifIXeqsrT0_4rankLi2EERS1_E4typeERKNS_10ExpressionIT_SD_EE and do both forward/reverse
+ place foo
+<begin dump>
+  %198 = insertvalue { i8*, i32 } %197, i32 %196, 1, !dbg !9209
+  %25 = bitcast %"class.std::basic_string"* %5 to i8*, !dbg !9145
+  invoke void @_ZNK5adept14ExpressionSizeILi2EE3strEv(%"class.std::basic_string"* nonnull sret %13, %"class.adept::ExpressionSize"* nonnull %3)
+          to label %87 unwind label %106, !dbg !9169
+  %170 = load float*, float** %18, align 8, !dbg !9193, !tbaa !9189
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %21) #3, !dbg !9209
+  %197 = insertvalue { i8*, i32 } undef, i8* %195, 0, !dbg !9209
+  %24 = bitcast %"class.std::basic_string"* %4 to i8*, !dbg !9144
+  invoke void @__cxa_throw(i8* %29, i8* bitcast ({ i8*, i8*, i8* }* @_ZTIN5adept13size_mismatchE to i8*), i8* bitcast (void (%"class.adept::exception"*)* @_ZN5adept9exceptionD2Ev to i8*)) #32
+          to label %199 unwind label %56, !dbg !9150
+  invoke void @_ZNK5adept5ArrayILi2EfLb0EE18expression_string_Ev(%"class.std::basic_string"* nonnull sret %14, %"class.adept::Array"* %0)
+          to label %90 unwind label %114, !dbg !9171
+  %21 = bitcast %"class.adept::ExpressionSize"* %3 to i8*, !dbg !9140
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %25) #3, !dbg !9145
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %167) #3, !dbg !9204
+  %105 = extractvalue { i8*, i32 } %103, 1, !dbg !9179
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %21) #3, !dbg !9209
+  call void @llvm.dbg.value(metadata %"class.adept::ExpressionSize"* %3, metadata !66578, metadata !DIExpression()), !dbg !66596
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %26) #3, !dbg !9146
+  call void @_ZNSaIcED2Ev(%"class.std::allocator"* nonnull %10) #3, !dbg !9167
+  call void @_ZNK5adept10ExpressionIfNS_8internal19BinaryOpScalarRightIfNS1_14UnaryOperationIfNS1_3ExpENS2_IfNS_5ArrayILi2EfLb0EEENS1_8SubtractEfEEEENS1_8MultiplyEfEEE17expression_stringEv(%"class.std::basic_string"* nonnull sret %6, %"struct.adept::Expression.42"* nonnull %1), !dbg !9147
+  invoke void @_ZStplIcSt11char_traitsIcESaIcEESbIT_T0_T1_ERKS6_OS6_(%"class.std::basic_string"* nonnull sret %7, %"class.std::basic_string"* nonnull dereferenceable(8) %4, %"class.std::basic_string"* nonnull dereferenceable(8) %8)
+          to label %35 unwind label %52, !dbg !9152
+  %108 = extractvalue { i8*, i32 } %107, 0, !dbg !9179
+  invoke void @_ZStplIcSt11char_traitsIcESaIcEESbIT_T0_T1_EOS6_S7_(%"class.std::basic_string"* nonnull sret %11, %"class.std::basic_string"* nonnull dereferenceable(8) %12, %"class.std::basic_string"* nonnull dereferenceable(8) %14)
+          to label %91 unwind label %118, !dbg !9172
+  invoke void @_ZN5adept13size_mismatchC2ERKSs(%"class.adept::size_mismatch"* %96, %"class.std::basic_string"* nonnull dereferenceable(8) %15)
+          to label %101 unwind label %146, !dbg !9178
+  call void @_ZN5adept5ArrayILi2EfLb0EE18assign_expression_ILi2ELb0ELb0ENS_8internal19BinaryOpScalarRightIfNS3_14UnaryOperationIfNS3_3ExpENS4_IfS1_NS3_8SubtractEfEEEENS3_8MultiplyEfEEEENS3_9enable_ifIXaantT0_oontsr9expr_castIT2_EE15is_vectorizablentsr7is_sameINSD_4typeEfEE5valueEvE4typeERKSD_(%"class.adept::Array"* %0, %"struct.adept::internal::BinaryOpScalarRight"* nonnull dereferenceable(32) %190), !dbg !9207
+  call void @_ZN5adept14ExpressionSizeILi2EEC2Ev(%"class.adept::ExpressionSize"* nonnull %3), !dbg !9141
+  br i1 %22, label %74, label %23, !dbg !9143
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %168) #3, !dbg !9204
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %21) #3, !dbg !9140
+  %109 = extractvalue { i8*, i32 } %107, 1, !dbg !9179
+  invoke void @_ZStplIcSt11char_traitsIcESaIcEESbIT_T0_T1_EOS6_PKS3_(%"class.std::basic_string"* nonnull sret %12, %"class.std::basic_string"* nonnull dereferenceable(8) %13, i8* getelementptr inbounds ([21 x i8], [21 x i8]* @.str.133, i64 0, i64 0))
+          to label %88 unwind label %110, !dbg !9170
+  %22 = call zeroext i1 @_ZNK5adept10ExpressionIfNS_8internal19BinaryOpScalarRightIfNS1_14UnaryOperationIfNS1_3ExpENS2_IfNS_5ArrayILi2EfLb0EEENS1_8SubtractEfEEEENS1_8MultiplyEfEEE14get_dimensionsILi2EEEbRNS_14ExpressionSizeIXT_EEE(%"struct.adept::Expression.42"* nonnull %1, %"class.adept::ExpressionSize"* nonnull dereferenceable(8) %3), !dbg !9142
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %5) #3, !dbg !9145
+  %112 = extractvalue { i8*, i32 } %111, 0, !dbg !9179
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %24) #3, !dbg !9144
+  %92 = invoke dereferenceable(8) %"class.std::basic_string"* @_ZNSspLERKSs(%"class.std::basic_string"* nonnull %9, %"class.std::basic_string"* nonnull dereferenceable(8) %11)
+          to label %93 unwind label %122, !dbg !9173
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %6) #3, !dbg !9145
+  invoke void @_ZNSsC1EPKcRKSaIcE(%"class.std::basic_string"* nonnull %9, i8* getelementptr inbounds ([5 x i8], [5 x i8]* @.str.132, i64 0, i64 0), %"class.std::allocator"* nonnull dereferenceable(1) %10)
+          to label %83 unwind label %102, !dbg !9166
+  %184 = extractvalue { i8*, i32 } %183, 0, !dbg !9203
+  br label %71, !dbg !9145
+  call void @llvm.lifetime.end.p0i8(i64 32, i8* nonnull %173) #3, !dbg !9201
+  %29 = call i8* @__cxa_allocate_exception(i64 16) #3, !dbg !9150
+  call void @llvm.dbg.value(metadata %"class.adept::ExpressionSize"* %3, metadata !66578, metadata !DIExpression()), !dbg !66596
+  call void @_ZNSaIcED2Ev(%"class.std::allocator"* nonnull %10) #3, !dbg !9167
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %167) #3, !dbg !9204
+  %181 = extractvalue { i8*, i32 } %179, 1, !dbg !9203
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %168) #3, !dbg !9204
+  %47 = phi i32 [ %44, %41 ], [ %40, %37 ]
+  %39 = extractvalue { i8*, i32 } %38, 0, !dbg !9154
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %11) #3, !dbg !9174
+  invoke void @_ZStplIcSt11char_traitsIcESaIcEESbIT_T0_T1_EPKS3_OS6_(%"class.std::basic_string"* nonnull sret %5, i8* getelementptr inbounds ([24 x i8], [24 x i8]* @.str.130, i64 0, i64 0), %"class.std::basic_string"* nonnull dereferenceable(8) %6)
+          to label %27 unwind label %37, !dbg !9148
+  %180 = extractvalue { i8*, i32 } %179, 0, !dbg !9203
+  call void @llvm.lifetime.start.p0i8(i64 32, i8* nonnull %173) #3, !dbg !9196
+  %40 = extractvalue { i8*, i32 } %38, 1, !dbg !9154
+  %46 = phi i8* [ %43, %41 ], [ %39, %37 ]
+  call void @llvm.dbg.value(metadata %"class.adept::ExpressionSize"* %3, metadata !66578, metadata !DIExpression()), !dbg !66596
+  br label %45, !dbg !9145
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %14) #3, !dbg !9174
+  %43 = extractvalue { i8*, i32 } %42, 0, !dbg !9154
+  %42 = landingpad { i8*, i32 }
+          cleanup, !dbg !9154
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %12) #3, !dbg !9174
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %168) #3, !dbg !9184
+  br label %45, !dbg !9154
+  call void @llvm.lifetime.end.p0i8(i64 32, i8* nonnull %173) #3, !dbg !9201
+  %44 = extractvalue { i8*, i32 } %42, 1, !dbg !9154
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %13) #3, !dbg !9174
+  %190 = call dereferenceable(32) %"struct.adept::internal::BinaryOpScalarRight"* @_ZNK5adept10ExpressionIfNS_8internal19BinaryOpScalarRightIfNS1_14UnaryOperationIfNS1_3ExpENS2_IfNS_5ArrayILi2EfLb0EEENS1_8SubtractEfEEEENS1_8MultiplyEfEEE4castEv(%"struct.adept::Expression.42"* nonnull %1), !dbg !9205
+  invoke void @_ZN5adept8internal18exception_locationEPKci(%"class.std::basic_string"* nonnull sret %8, i8* getelementptr inbounds ([37 x i8], [37 x i8]* @.str.120, i64 0, i64 0), i32 472)
+          to label %34 unwind label %48, !dbg !9152
+  %38 = landingpad { i8*, i32 }
+          cleanup, !dbg !9154
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %5) #3, !dbg !9145
+  call void @_ZN5adept5ArrayILi2EfLb0EED2Ev(%"class.adept::Array"* nonnull %19) #3, !dbg !9201
+  %33 = bitcast %"class.std::basic_string"* %8 to i8*, !dbg !9152
+  %94 = call i8* @__cxa_allocate_exception(i64 16) #3, !dbg !9175
+  call void @llvm.dbg.value(metadata %"class.adept::ExpressionSize"* %3, metadata !66578, metadata !DIExpression()), !dbg !66596
+  invoke void @_ZN5adept13size_mismatchC2ERKSs(%"class.adept::size_mismatch"* %31, %"class.std::basic_string"* nonnull dereferenceable(8) %7)
+          to label %36 unwind label %56, !dbg !9153
+  call void @_ZN5adept5ArrayILi2EfLb0EED2Ev(%"class.adept::Array"* nonnull %20) #3, !dbg !9200
+  invoke void @_ZStplIcSt11char_traitsIcESaIcEESbIT_T0_T1_EOS6_PKS3_(%"class.std::basic_string"* nonnull sret %4, %"class.std::basic_string"* nonnull dereferenceable(8) %5, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.131, i64 0, i64 0))
+          to label %28 unwind label %41, !dbg !9149
+  %32 = bitcast %"class.std::basic_string"* %7 to i8*, !dbg !9151
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %81) #3, !dbg !9180
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %6) #3, !dbg !9145
+  %31 = bitcast i8* %29 to %"class.adept::size_mismatch"*, !dbg !9150
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %167) #3, !dbg !9183
+  %185 = extractvalue { i8*, i32 } %183, 1, !dbg !9203
+  %104 = extractvalue { i8*, i32 } %103, 0, !dbg !9179
+  %50 = extractvalue { i8*, i32 } %49, 0, !dbg !9154
+  call void @llvm.dbg.value(metadata %"class.std::basic_string"* %4, metadata !66579, metadata !DIExpression()), !dbg !66610
+  %26 = bitcast %"class.std::basic_string"* %6 to i8*, !dbg !9146
+  call void @llvm.dbg.value(metadata %"class.adept::Array"* %19, metadata !66590, metadata !DIExpression()), !dbg !66648
+  br i1 %64, label %65, label %68, !dbg !9150
+  call void @__cxa_free_exception(i8* %29) #3, !dbg !9150
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %97) #3, !dbg !9175
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %4) #3, !dbg !9156
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %97) #3, !dbg !9175
+  %75 = call zeroext i1 @_ZNK5adept5ArrayILi2EfLb0EE5emptyEv(%"class.adept::Array"* %0), !dbg !9157
+  %171 = call zeroext i1 @_ZNK5adept10ExpressionIfNS_8internal19BinaryOpScalarRightIfNS1_14UnaryOperationIfNS1_3ExpENS2_IfNS_5ArrayILi2EfLb0EEENS1_8SubtractEfEEEENS1_8MultiplyEfEEE10is_aliasedEPKfSE_(%"struct.adept::Expression.42"* nonnull %1, float* %169, float* %170), !dbg !9194
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %98) #3, !dbg !9175
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %84) #3, !dbg !9174
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %98) #3, !dbg !9175
+  invoke void @_ZN5adept5ArrayILi2EfLb0EE18assign_expression_ILi2ELb0ELb0ES1_EENS_8internal9enable_ifIXaaaaaantT0_sr9expr_castIT2_EE15is_vectorizablegtT_Li1Esr7is_sameINS5_4typeEfEE5valueEvE4typeES5_(%"class.adept::Array"* %0, %"class.adept::Array"* nonnull %20)
+          to label %177 unwind label %182, !dbg !9200
+  br i1 %75, label %76, label %77, !dbg !9158
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %85) #3, !dbg !9174
+  %174 = invoke dereferenceable(32) %"class.adept::Array"* @_ZN5adept5ArrayILi2EfLb0EEaSIfNS_8internal19BinaryOpScalarRightIfNS3_14UnaryOperationIfNS3_3ExpENS4_IfS1_NS3_8SubtractEfEEEENS3_8MultiplyEfEEEENS3_9enable_ifIXeqsrT0_4rankLi2EERS1_E4typeERKNS_10ExpressionIT_SD_EE(%"class.adept::Array"* nonnull %19, %"struct.adept::Expression.42"* nonnull dereferenceable(1) %1)
+          to label %175 unwind label %178, !dbg !9198
+  br i1 %79, label %164, label %80, !dbg !9164
+  call void @_ZNSaIcEC2Ev(%"class.std::allocator"* nonnull %10) #3, !dbg !9166
+  invoke void @_ZN5adept5ArrayILi2EfLb0EEC2ERS1_(%"class.adept::Array"* nonnull %20, %"class.adept::Array"* nonnull dereferenceable(32) %19)
+          to label %176 unwind label %178, !dbg !9199
+  resume { i8*, i32 } %198, !dbg !9209
+  %51 = extractvalue { i8*, i32 } %49, 1, !dbg !9154
+  %196 = phi i32 [ %188, %186 ], [ %163, %161 ], [ %73, %71 ]
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %89) #3, !dbg !9174
+  call void @llvm.dbg.value(metadata %"class.adept::Array"* %19, metadata !66590, metadata !DIExpression()), !dbg !66648
+  %54 = extractvalue { i8*, i32 } %53, 0, !dbg !9154
+  ret %"class.adept::Array"* %0, !dbg !9209
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %86) #3, !dbg !9174
+  call void @llvm.dbg.value(metadata float** %18, metadata !66589, metadata !DIExpression()), !dbg !66641
+  %195 = phi i8* [ %187, %186 ], [ %162, %161 ], [ %72, %71 ]
+  %55 = extractvalue { i8*, i32 } %53, 1, !dbg !9154
+  call void @llvm.dbg.value(metadata %"class.adept::Array"* %19, metadata !66590, metadata !DIExpression()), !dbg !66648
+  br label %192
+  br label %193, !dbg !9208
+  call void @llvm.dbg.value(metadata %"class.std::basic_string"* %9, metadata !66582, metadata !DIExpression()), !dbg !66622
+  unreachable
+  %59 = extractvalue { i8*, i32 } %58, 0, !dbg !9154
+  call void @llvm.lifetime.end.p0i8(i64 1, i8* nonnull %82) #3, !dbg !9167
+  call void @llvm.dbg.value(metadata float** %17, metadata !66586, metadata !DIExpression()), !dbg !66640
+  br label %194, !dbg !9204
+  %60 = extractvalue { i8*, i32 } %58, 1, !dbg !9154
+  %188 = phi i32 [ %185, %182 ], [ %181, %178 ]
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %97) #3, !dbg !9176
+  call void @llvm.dbg.value(metadata float* %169, metadata !66586, metadata !DIExpression()), !dbg !66640
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %7) #3, !dbg !9150
+  call void @llvm.dbg.value(metadata float* %170, metadata !66589, metadata !DIExpression()), !dbg !66641
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %98) #3, !dbg !9177
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %85) #3, !dbg !9174
+  br label %186, !dbg !9200
+  call void @_ZNK5adept5ArrayILi2EfLb0EE10data_rangeERPKfS4_(%"class.adept::Array"* %0, float** nonnull dereferenceable(8) %17, float** nonnull dereferenceable(8) %18), !dbg !9187
+  %187 = phi i8* [ %184, %182 ], [ %180, %178 ]
+  br label %186, !dbg !9203
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %8) #3, !dbg !9150
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %84) #3, !dbg !9174
+  %183 = landingpad { i8*, i32 }
+          cleanup, !dbg !9203
+  br label %192, !dbg !9202
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %89) #3, !dbg !9174
+  br label %161, !dbg !9167
+  %173 = bitcast %"class.adept::Array"* %19 to i8*, !dbg !9196
+  %125 = extractvalue { i8*, i32 } %123, 1, !dbg !9179
+  br label %135, !dbg !9179
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %89) #3, !dbg !9171
+  %179 = landingpad { i8*, i32 }
+          cleanup, !dbg !9203
+  %107 = landingpad { i8*, i32 }
+          cleanup, !dbg !9179
+  %121 = extractvalue { i8*, i32 } %119, 1, !dbg !9179
+  %167 = bitcast float** %17 to i8*, !dbg !9183
+  %111 = landingpad { i8*, i32 }
+          cleanup, !dbg !9179
+  br label %194, !dbg !9180
+  %124 = extractvalue { i8*, i32 } %123, 0, !dbg !9179
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %86) #3, !dbg !9174
+  %115 = landingpad { i8*, i32 }
+          cleanup, !dbg !9179
+  %168 = bitcast float** %18 to i8*, !dbg !9184
+  br label %132, !dbg !9179
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %85) #3, !dbg !9168
+  %119 = landingpad { i8*, i32 }
+          cleanup, !dbg !9179
+  %117 = extractvalue { i8*, i32 } %115, 1, !dbg !9179
+  br label %129, !dbg !9179
+  %163 = phi i32 [ %160, %158 ], [ %105, %102 ]
+  %120 = extractvalue { i8*, i32 } %119, 0, !dbg !9179
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %84) #3, !dbg !9168
+  br label %126, !dbg !9179
+  br label %126, !dbg !9174
+  %113 = extractvalue { i8*, i32 } %111, 1, !dbg !9179
+  %160 = phi i32 [ %156, %155 ], [ %153, %151 ], [ %137, %135 ]
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %86) #3, !dbg !9168
+  %123 = landingpad { i8*, i32 }
+          cleanup, !dbg !9179
+  %116 = extractvalue { i8*, i32 } %115, 0, !dbg !9179
+  %162 = phi i8* [ %159, %158 ], [ %104, %102 ]
+  %127 = phi i8* [ %124, %122 ], [ %120, %118 ]
+  br label %161, !dbg !9180
+  %140 = extractvalue { i8*, i32 } %139, 0, !dbg !9179
+  %73 = phi i32 [ %69, %68 ], [ %47, %45 ]
+  br label %194, !dbg !9156
+  %82 = getelementptr inbounds %"class.std::allocator", %"class.std::allocator"* %10, i64 0, i32 0, !dbg !9166
+  %159 = phi i8* [ %157, %155 ], [ %152, %151 ], [ %136, %135 ]
+  %141 = extractvalue { i8*, i32 } %139, 1, !dbg !9179
+  br label %158, !dbg !9175
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %13) #3, !dbg !9174
+  %156 = phi i32 [ %141, %138 ], [ %153, %151 ]
+  br label %164, !dbg !9161
+  call void @llvm.lifetime.end.p0i8(i64 1, i8* nonnull %82) #3, !dbg !9167
+  %84 = bitcast %"class.std::basic_string"* %11 to i8*, !dbg !9168
+  %157 = phi i8* [ %140, %138 ], [ %152, %151 ]
+  %81 = bitcast %"class.std::basic_string"* %9 to i8*, !dbg !9165
+  call void @llvm.lifetime.start.p0i8(i64 1, i8* nonnull %82) #3, !dbg !9166
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %12) #3, !dbg !9174
+  %86 = bitcast %"class.std::basic_string"* %13 to i8*, !dbg !9168
+  %78 = getelementptr inbounds %"class.adept::Array", %"class.adept::Array"* %0, i64 0, i32 2, !dbg !9162
+  %153 = phi i32 [ %150, %146 ], [ %145, %142 ]
+  %85 = bitcast %"class.std::basic_string"* %12 to i8*, !dbg !9168
+  %89 = bitcast %"class.std::basic_string"* %14 to i8*, !dbg !9171
+  %154 = phi i1 [ %147, %146 ], [ true, %142 ]
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %81) #3, !dbg !9165
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %11) #3, !dbg !9174
+  %97 = bitcast %"class.std::basic_string"* %15 to i8*, !dbg !9176
+  %96 = bitcast i8* %94 to %"class.adept::size_mismatch"*, !dbg !9175
+  %152 = phi i8* [ %149, %146 ], [ %144, %142 ]
+  br label %151, !dbg !9175
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %14) #3, !dbg !9174
+  %103 = landingpad { i8*, i32 }
+          cleanup, !dbg !9179
+  %79 = call zeroext i1 @_ZN5adept8internal10compatibleILi2ELi2EEENS0_9enable_ifIXaaeqT_T0_gtT_Li1EEbE4typeERKNS_14ExpressionSizeIXT_EEERKNS5_IXT0_EEE(%"class.adept::ExpressionSize"* nonnull dereferenceable(8) %3, %"class.adept::ExpressionSize"* nonnull dereferenceable(8) %78), !dbg !9163
+  %98 = bitcast %"class.std::basic_string"* %16 to i8*, !dbg !9177
+  %147 = phi i1 [ false, %101 ], [ true, %100 ]
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %24) #3, !dbg !9156
+  br i1 %154, label %155, label %158, !dbg !9175
+  %66 = phi i32 [ %51, %48 ], [ %63, %61 ]
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %32) #3, !dbg !9150
+  %148 = landingpad { i8*, i32 }
+          cleanup, !dbg !9179
+  %3 = alloca %"class.adept::ExpressionSize", align 4
+  call void @__cxa_free_exception(i8* %94) #3, !dbg !9175
+  %67 = phi i8* [ %50, %48 ], [ %62, %61 ]
+  call void @_ZN5adept5ArrayILi2EfLb0EE6resizeERKNS_14ExpressionSizeILi2EEE(%"class.adept::Array"* %0, %"class.adept::ExpressionSize"* nonnull dereferenceable(8) %3), !dbg !9159
+  br label %155, !dbg !9175
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %15) #3, !dbg !9175
+  %143 = landingpad { i8*, i32 }
+          cleanup, !dbg !9179
+  br label %151, !dbg !9179
+  br label %68, !dbg !9150
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %16) #3, !dbg !9175
+  %137 = phi i32 [ %134, %132 ], [ %109, %106 ]
+  %69 = phi i32 [ %66, %65 ], [ %63, %61 ]
+  %149 = extractvalue { i8*, i32 } %148, 0, !dbg !9179
+  %7 = alloca %"class.std::basic_string", align 8
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %32) #3, !dbg !9150
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %33) #3, !dbg !9150
+  %70 = phi i8* [ %67, %65 ], [ %62, %61 ]
+  %9 = alloca %"class.std::basic_string", align 8
+  %8 = alloca %"class.std::basic_string", align 8
+  %139 = landingpad { i8*, i32 }
+          cleanup, !dbg !9179
+  %150 = extractvalue { i8*, i32 } %148, 1, !dbg !9179
+  br label %158, !dbg !9174
+  br label %135, !dbg !9174
+  call void @llvm.dbg.value(metadata %"class.adept::Array"* %0, metadata !66576, metadata !DIExpression()), !dbg !66593
+  %5 = alloca %"class.std::basic_string", align 8
+  %4 = alloca %"class.std::basic_string", align 8
+  %136 = phi i8* [ %133, %132 ], [ %108, %106 ]
+  br label %71, !dbg !9156
+  %6 = alloca %"class.std::basic_string", align 8
+  %72 = phi i8* [ %70, %68 ], [ %46, %45 ]
+  %144 = extractvalue { i8*, i32 } %143, 0, !dbg !9179
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %33) #3, !dbg !9150
+  call void @llvm.dbg.value(metadata %"struct.adept::Expression.42"* %1, metadata !66577, metadata !DIExpression()), !dbg !66594
+  %145 = extractvalue { i8*, i32 } %143, 1, !dbg !9179
+  %13 = alloca %"class.std::basic_string", align 8
+  %49 = landingpad { i8*, i32 }
+          cleanup, !dbg !9154
+  call void @_ZN5adept5ArrayILi2EfLb0EED2Ev(%"class.adept::Array"* nonnull %20) #3, !dbg !9200
+  invoke void @__cxa_throw(i8* %94, i8* bitcast ({ i8*, i8*, i8* }* @_ZTIN5adept13size_mismatchE to i8*), i8* bitcast (void (%"class.adept::exception"*)* @_ZN5adept9exceptionD2Ev to i8*)) #32
+          to label %199 unwind label %146, !dbg !9175
+  %12 = alloca %"class.std::basic_string", align 8
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %26) #3, !dbg !9145
+  %134 = phi i32 [ %131, %129 ], [ %113, %110 ]
+  br label %65, !dbg !9150
+  %14 = alloca %"class.std::basic_string", align 8
+  %53 = landingpad { i8*, i32 }
+          cleanup, !dbg !9154
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %33) #3, !dbg !9152
+  call void @_ZN5adept5ArrayILi2EfLb0EED2Ev(%"class.adept::Array"* nonnull %19) #3, !dbg !9201
+  br label %61, !dbg !9154
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %25) #3, !dbg !9145
+  %10 = alloca %"class.std::allocator", align 1
+  br i1 %171, label %172, label %189, !dbg !9195
+  %57 = phi i1 [ false, %36 ], [ true, %35 ]
+  br label %132, !dbg !9174
+  %133 = phi i8* [ %130, %129 ], [ %112, %110 ]
+  %11 = alloca %"class.std::basic_string", align 8
+  %58 = landingpad { i8*, i32 }
+          cleanup, !dbg !9154
+  br label %129, !dbg !9174
+  %18 = alloca float*, align 8
+  br label %61, !dbg !9150
+  %130 = phi i8* [ %127, %126 ], [ %116, %114 ]
+  call void @_ZN5adept5ArrayILi2EfLb0EEC2Ev(%"class.adept::Array"* nonnull %19), !dbg !9197
+  %62 = phi i8* [ %59, %56 ], [ %54, %52 ]
+  br i1 %165, label %193, label %166, !dbg !9182
+  invoke void @_ZN5adept8internal18exception_locationEPKci(%"class.std::basic_string"* nonnull sret %16, i8* getelementptr inbounds ([37 x i8], [37 x i8]* @.str.120, i64 0, i64 0), i32 480)
+          to label %99 unwind label %138, !dbg !9177
+  %19 = alloca %"class.adept::Array", align 8
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %26) #3, !dbg !9145
+  %131 = phi i32 [ %128, %126 ], [ %117, %114 ]
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %32) #3, !dbg !9151
+  %63 = phi i32 [ %60, %56 ], [ %55, %52 ]
+  %15 = alloca %"class.std::basic_string", align 8
+  %128 = phi i32 [ %125, %122 ], [ %121, %118 ]
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %9) #3, !dbg !9180
+  %17 = alloca float*, align 8
+  %20 = alloca %"class.adept::Array", align 8
+  invoke void @_ZStplIcSt11char_traitsIcESaIcEESbIT_T0_T1_ERKS6_OS6_(%"class.std::basic_string"* nonnull sret %15, %"class.std::basic_string"* nonnull dereferenceable(8) %9, %"class.std::basic_string"* nonnull dereferenceable(8) %16)
+          to label %100 unwind label %142, !dbg !9177
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %25) #3, !dbg !9145
+  %64 = phi i1 [ %57, %56 ], [ true, %52 ]
+  %165 = call zeroext i1 @_ZNK5adept5ArrayILi2EfLb0EE5emptyEv(%"class.adept::Array"* %0), !dbg !9181
+  %16 = alloca %"class.std::basic_string", align 8
+  %169 = load float*, float** %17, align 8, !dbg !9188, !tbaa !9189
+</end dump>
+ place foo
+<begin dump>
+  %199 = insertvalue { i8*, i32 } %198, i32 %197, 1, !dbg !9209
+  %26 = bitcast %"class.std::basic_string"* %6 to i8*, !dbg !9145
+  invoke void @_ZNK5adept14ExpressionSizeILi2EE3strEv(%"class.std::basic_string"* nonnull sret %14, %"class.adept::ExpressionSize"* nonnull %4)
+          to label %88 unwind label %107, !dbg !9169
+  %171 = load float*, float** %19, align 8, !dbg !9193, !tbaa !9189
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %22) #3, !dbg !9209
+  %198 = insertvalue { i8*, i32 } undef, i8* %196, 0, !dbg !9209
+  %25 = bitcast %"class.std::basic_string"* %5 to i8*, !dbg !9144
+  invoke void @__cxa_throw(i8* %30, i8* bitcast ({ i8*, i8*, i8* }* @_ZTIN5adept13size_mismatchE to i8*), i8* bitcast (void (%"class.adept::exception"*)* @_ZN5adept9exceptionD2Ev to i8*)) #32
+          to label %200 unwind label %57, !dbg !9150
+  invoke void @_ZNK5adept5ArrayILi2EfLb0EE18expression_string_Ev(%"class.std::basic_string"* nonnull sret %15, %"class.adept::Array"* %0)
+          to label %91 unwind label %115, !dbg !9171
+  %22 = bitcast %"class.adept::ExpressionSize"* %4 to i8*, !dbg !9140
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %26) #3, !dbg !9145
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %168) #3, !dbg !9204
+  %106 = extractvalue { i8*, i32 } %104, 1, !dbg !9179
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %22) #3, !dbg !9209
+  call void @llvm.dbg.value(metadata %"class.adept::ExpressionSize"* %4, metadata !66578, metadata !DIExpression()), !dbg !66596
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %27) #3, !dbg !9146
+  call void @_ZNSaIcED2Ev(%"class.std::allocator"* nonnull %11) #3, !dbg !9167
+  call void @_ZNK5adept10ExpressionIfNS_8internal19BinaryOpScalarRightIfNS1_14UnaryOperationIfNS1_3ExpENS2_IfNS_5ArrayILi2EfLb0EEENS1_8SubtractEfEEEENS1_8MultiplyEfEEE17expression_stringEv(%"class.std::basic_string"* nonnull sret %7, %"struct.adept::Expression.42"* nonnull %1), !dbg !9147
+  invoke void @_ZStplIcSt11char_traitsIcESaIcEESbIT_T0_T1_ERKS6_OS6_(%"class.std::basic_string"* nonnull sret %8, %"class.std::basic_string"* nonnull dereferenceable(8) %5, %"class.std::basic_string"* nonnull dereferenceable(8) %9)
+          to label %36 unwind label %53, !dbg !9152
+  %109 = extractvalue { i8*, i32 } %108, 0, !dbg !9179
+  invoke void @_ZStplIcSt11char_traitsIcESaIcEESbIT_T0_T1_EOS6_S7_(%"class.std::basic_string"* nonnull sret %12, %"class.std::basic_string"* nonnull dereferenceable(8) %13, %"class.std::basic_string"* nonnull dereferenceable(8) %15)
+          to label %92 unwind label %119, !dbg !9172
+  invoke void @_ZN5adept13size_mismatchC2ERKSs(%"class.adept::size_mismatch"* %97, %"class.std::basic_string"* nonnull dereferenceable(8) %16)
+          to label %102 unwind label %147, !dbg !9178
+  call void @_ZN5adept5ArrayILi2EfLb0EE18assign_expression_ILi2ELb0ELb0ENS_8internal19BinaryOpScalarRightIfNS3_14UnaryOperationIfNS3_3ExpENS4_IfS1_NS3_8SubtractEfEEEENS3_8MultiplyEfEEEENS3_9enable_ifIXaantT0_oontsr9expr_castIT2_EE15is_vectorizablentsr7is_sameINSD_4typeEfEE5valueEvE4typeERKSD_(%"class.adept::Array"* %0, %"struct.adept::internal::BinaryOpScalarRight"* nonnull dereferenceable(32) %191), !dbg !9207
+  call void @_ZN5adept14ExpressionSizeILi2EEC2Ev(%"class.adept::ExpressionSize"* nonnull %4), !dbg !9141
+  br i1 %23, label %75, label %24, !dbg !9143
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %169) #3, !dbg !9204
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %22) #3, !dbg !9140
+  %110 = extractvalue { i8*, i32 } %108, 1, !dbg !9179
+  invoke void @_ZStplIcSt11char_traitsIcESaIcEESbIT_T0_T1_EOS6_PKS3_(%"class.std::basic_string"* nonnull sret %13, %"class.std::basic_string"* nonnull dereferenceable(8) %14, i8* getelementptr inbounds ([21 x i8], [21 x i8]* @.str.133, i64 0, i64 0))
+          to label %89 unwind label %111, !dbg !9170
+  %23 = call zeroext i1 @_ZNK5adept10ExpressionIfNS_8internal19BinaryOpScalarRightIfNS1_14UnaryOperationIfNS1_3ExpENS2_IfNS_5ArrayILi2EfLb0EEENS1_8SubtractEfEEEENS1_8MultiplyEfEEE14get_dimensionsILi2EEEbRNS_14ExpressionSizeIXT_EEE(%"struct.adept::Expression.42"* nonnull %1, %"class.adept::ExpressionSize"* nonnull dereferenceable(8) %4), !dbg !9142
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %6) #3, !dbg !9145
+  %113 = extractvalue { i8*, i32 } %112, 0, !dbg !9179
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %25) #3, !dbg !9144
+  %93 = invoke dereferenceable(8) %"class.std::basic_string"* @_ZNSspLERKSs(%"class.std::basic_string"* nonnull %10, %"class.std::basic_string"* nonnull dereferenceable(8) %12)
+          to label %94 unwind label %123, !dbg !9173
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %7) #3, !dbg !9145
+  invoke void @_ZNSsC1EPKcRKSaIcE(%"class.std::basic_string"* nonnull %10, i8* getelementptr inbounds ([5 x i8], [5 x i8]* @.str.132, i64 0, i64 0), %"class.std::allocator"* nonnull dereferenceable(1) %11)
+          to label %84 unwind label %103, !dbg !9166
+  %185 = extractvalue { i8*, i32 } %184, 0, !dbg !9203
+  br label %72, !dbg !9145
+  call void @llvm.lifetime.end.p0i8(i64 32, i8* nonnull %174) #3, !dbg !9201
+  %30 = call i8* @__cxa_allocate_exception(i64 16) #3, !dbg !9150
+  call void @llvm.dbg.value(metadata %"class.adept::ExpressionSize"* %4, metadata !66578, metadata !DIExpression()), !dbg !66596
+  call void @_ZNSaIcED2Ev(%"class.std::allocator"* nonnull %11) #3, !dbg !9167
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %168) #3, !dbg !9204
+  %182 = extractvalue { i8*, i32 } %180, 1, !dbg !9203
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %169) #3, !dbg !9204
+  %48 = phi i32 [ %45, %42 ], [ %41, %38 ]
+  %40 = extractvalue { i8*, i32 } %39, 0, !dbg !9154
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %12) #3, !dbg !9174
+  invoke void @_ZStplIcSt11char_traitsIcESaIcEESbIT_T0_T1_EPKS3_OS6_(%"class.std::basic_string"* nonnull sret %6, i8* getelementptr inbounds ([24 x i8], [24 x i8]* @.str.130, i64 0, i64 0), %"class.std::basic_string"* nonnull dereferenceable(8) %7)
+          to label %28 unwind label %38, !dbg !9148
+  %181 = extractvalue { i8*, i32 } %180, 0, !dbg !9203
+  call void @llvm.lifetime.start.p0i8(i64 32, i8* nonnull %174) #3, !dbg !9196
+  %41 = extractvalue { i8*, i32 } %39, 1, !dbg !9154
+  %47 = phi i8* [ %44, %42 ], [ %40, %38 ]
+  call void @llvm.dbg.value(metadata %"class.adept::ExpressionSize"* %4, metadata !66578, metadata !DIExpression()), !dbg !66596
+  br label %46, !dbg !9145
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %15) #3, !dbg !9174
+  %44 = extractvalue { i8*, i32 } %43, 0, !dbg !9154
+  %43 = landingpad { i8*, i32 }
+          cleanup, !dbg !9154
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %13) #3, !dbg !9174
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %169) #3, !dbg !9184
+  br label %46, !dbg !9154
+  call void @llvm.lifetime.end.p0i8(i64 32, i8* nonnull %174) #3, !dbg !9201
+  %45 = extractvalue { i8*, i32 } %43, 1, !dbg !9154
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %14) #3, !dbg !9174
+  %191 = call dereferenceable(32) %"struct.adept::internal::BinaryOpScalarRight"* @_ZNK5adept10ExpressionIfNS_8internal19BinaryOpScalarRightIfNS1_14UnaryOperationIfNS1_3ExpENS2_IfNS_5ArrayILi2EfLb0EEENS1_8SubtractEfEEEENS1_8MultiplyEfEEE4castEv(%"struct.adept::Expression.42"* nonnull %1), !dbg !9205
+  invoke void @_ZN5adept8internal18exception_locationEPKci(%"class.std::basic_string"* nonnull sret %9, i8* getelementptr inbounds ([37 x i8], [37 x i8]* @.str.120, i64 0, i64 0), i32 472)
+          to label %35 unwind label %49, !dbg !9152
+  %39 = landingpad { i8*, i32 }
+          cleanup, !dbg !9154
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %6) #3, !dbg !9145
+  call void @_ZN5adept5ArrayILi2EfLb0EED2Ev(%"class.adept::Array"* nonnull %20) #3, !dbg !9201
+  %34 = bitcast %"class.std::basic_string"* %9 to i8*, !dbg !9152
+  %95 = call i8* @__cxa_allocate_exception(i64 16) #3, !dbg !9175
+  call void @llvm.dbg.value(metadata %"class.adept::ExpressionSize"* %4, metadata !66578, metadata !DIExpression()), !dbg !66596
+  invoke void @_ZN5adept13size_mismatchC2ERKSs(%"class.adept::size_mismatch"* %32, %"class.std::basic_string"* nonnull dereferenceable(8) %8)
+          to label %37 unwind label %57, !dbg !9153
+  call void @_ZN5adept5ArrayILi2EfLb0EED2Ev(%"class.adept::Array"* nonnull %21) #3, !dbg !9200
+  invoke void @_ZStplIcSt11char_traitsIcESaIcEESbIT_T0_T1_EOS6_PKS3_(%"class.std::basic_string"* nonnull sret %5, %"class.std::basic_string"* nonnull dereferenceable(8) %6, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.131, i64 0, i64 0))
+          to label %29 unwind label %42, !dbg !9149
+  %33 = bitcast %"class.std::basic_string"* %8 to i8*, !dbg !9151
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %82) #3, !dbg !9180
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %7) #3, !dbg !9145
+  %32 = bitcast i8* %30 to %"class.adept::size_mismatch"*, !dbg !9150
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %168) #3, !dbg !9183
+  %186 = extractvalue { i8*, i32 } %184, 1, !dbg !9203
+  %105 = extractvalue { i8*, i32 } %104, 0, !dbg !9179
+  %51 = extractvalue { i8*, i32 } %50, 0, !dbg !9154
+  call void @llvm.dbg.value(metadata %"class.std::basic_string"* %5, metadata !66579, metadata !DIExpression()), !dbg !66610
+  %27 = bitcast %"class.std::basic_string"* %7 to i8*, !dbg !9146
+  call void @llvm.dbg.value(metadata %"class.adept::Array"* %20, metadata !66590, metadata !DIExpression()), !dbg !66648
+  br i1 %65, label %66, label %69, !dbg !9150
+  call void @__cxa_free_exception(i8* %30) #3, !dbg !9150
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %98) #3, !dbg !9175
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %5) #3, !dbg !9156
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %98) #3, !dbg !9175
+  %76 = call zeroext i1 @_ZNK5adept5ArrayILi2EfLb0EE5emptyEv(%"class.adept::Array"* %0), !dbg !9157
+  %172 = call zeroext i1 @_ZNK5adept10ExpressionIfNS_8internal19BinaryOpScalarRightIfNS1_14UnaryOperationIfNS1_3ExpENS2_IfNS_5ArrayILi2EfLb0EEENS1_8SubtractEfEEEENS1_8MultiplyEfEEE10is_aliasedEPKfSE_(%"struct.adept::Expression.42"* nonnull %1, float* %170, float* %171), !dbg !9194
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %99) #3, !dbg !9175
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %85) #3, !dbg !9174
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %99) #3, !dbg !9175
+  invoke void @_ZN5adept5ArrayILi2EfLb0EE18assign_expression_ILi2ELb0ELb0ES1_EENS_8internal9enable_ifIXaaaaaantT0_sr9expr_castIT2_EE15is_vectorizablegtT_Li1Esr7is_sameINS5_4typeEfEE5valueEvE4typeES5_(%"class.adept::Array"* %0, %"class.adept::Array"* nonnull %21)
+          to label %178 unwind label %183, !dbg !9200
+  br i1 %76, label %77, label %78, !dbg !9158
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %86) #3, !dbg !9174
+  %175 = invoke dereferenceable(32) %"class.adept::Array"* @_ZN5adept5ArrayILi2EfLb0EEaSIfNS_8internal19BinaryOpScalarRightIfNS3_14UnaryOperationIfNS3_3ExpENS4_IfS1_NS3_8SubtractEfEEEENS3_8MultiplyEfEEEENS3_9enable_ifIXeqsrT0_4rankLi2EERS1_E4typeERKNS_10ExpressionIT_SD_EE(%"class.adept::Array"* nonnull %20, %"struct.adept::Expression.42"* nonnull dereferenceable(1) %1)
+          to label %176 unwind label %179, !dbg !9198
+  br i1 %80, label %165, label %81, !dbg !9164
+  call void @_ZNSaIcEC2Ev(%"class.std::allocator"* nonnull %11) #3, !dbg !9166
+  invoke void @_ZN5adept5ArrayILi2EfLb0EEC2ERS1_(%"class.adept::Array"* nonnull %21, %"class.adept::Array"* nonnull dereferenceable(32) %20)
+          to label %177 unwind label %179, !dbg !9199
+  resume { i8*, i32 } %199, !dbg !9209
+  %52 = extractvalue { i8*, i32 } %50, 1, !dbg !9154
+  %197 = phi i32 [ %189, %187 ], [ %164, %162 ], [ %74, %72 ]
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %90) #3, !dbg !9174
+  call void @llvm.dbg.value(metadata %"class.adept::Array"* %20, metadata !66590, metadata !DIExpression()), !dbg !66648
+  %55 = extractvalue { i8*, i32 } %54, 0, !dbg !9154
+  ret %"class.adept::Array"* %0, !dbg !9209
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %87) #3, !dbg !9174
+  call void @llvm.dbg.value(metadata float** %19, metadata !66589, metadata !DIExpression()), !dbg !66641
+  %196 = phi i8* [ %188, %187 ], [ %163, %162 ], [ %73, %72 ]
+  %56 = extractvalue { i8*, i32 } %54, 1, !dbg !9154
+  call void @llvm.dbg.value(metadata %"class.adept::Array"* %20, metadata !66590, metadata !DIExpression()), !dbg !66648
+  br label %193
+  br label %194, !dbg !9208
+  call void @llvm.dbg.value(metadata %"class.std::basic_string"* %10, metadata !66582, metadata !DIExpression()), !dbg !66622
+  unreachable
+  %60 = extractvalue { i8*, i32 } %59, 0, !dbg !9154
+  call void @llvm.lifetime.end.p0i8(i64 1, i8* nonnull %83) #3, !dbg !9167
+  call void @llvm.dbg.value(metadata float** %18, metadata !66586, metadata !DIExpression()), !dbg !66640
+  br label %195, !dbg !9204
+  %61 = extractvalue { i8*, i32 } %59, 1, !dbg !9154
+  %189 = phi i32 [ %186, %183 ], [ %182, %179 ]
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %98) #3, !dbg !9176
+  call void @llvm.dbg.value(metadata float* %170, metadata !66586, metadata !DIExpression()), !dbg !66640
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %8) #3, !dbg !9150
+  call void @llvm.dbg.value(metadata float* %171, metadata !66589, metadata !DIExpression()), !dbg !66641
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %99) #3, !dbg !9177
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %86) #3, !dbg !9174
+  br label %187, !dbg !9200
+  call void @_ZNK5adept5ArrayILi2EfLb0EE10data_rangeERPKfS4_(%"class.adept::Array"* %0, float** nonnull dereferenceable(8) %18, float** nonnull dereferenceable(8) %19), !dbg !9187
+  %188 = phi i8* [ %185, %183 ], [ %181, %179 ]
+  br label %187, !dbg !9203
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %9) #3, !dbg !9150
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %85) #3, !dbg !9174
+  %184 = landingpad { i8*, i32 }
+          cleanup, !dbg !9203
+  br label %193, !dbg !9202
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %90) #3, !dbg !9174
+  br label %162, !dbg !9167
+  %174 = bitcast %"class.adept::Array"* %20 to i8*, !dbg !9196
+  %126 = extractvalue { i8*, i32 } %124, 1, !dbg !9179
+  br label %136, !dbg !9179
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %90) #3, !dbg !9171
+  %180 = landingpad { i8*, i32 }
+          cleanup, !dbg !9203
+  %108 = landingpad { i8*, i32 }
+          cleanup, !dbg !9179
+  %122 = extractvalue { i8*, i32 } %120, 1, !dbg !9179
+  %168 = bitcast float** %18 to i8*, !dbg !9183
+  %112 = landingpad { i8*, i32 }
+          cleanup, !dbg !9179
+  br label %195, !dbg !9180
+  %125 = extractvalue { i8*, i32 } %124, 0, !dbg !9179
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %87) #3, !dbg !9174
+  %116 = landingpad { i8*, i32 }
+          cleanup, !dbg !9179
+  %169 = bitcast float** %19 to i8*, !dbg !9184
+  br label %133, !dbg !9179
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %86) #3, !dbg !9168
+  %120 = landingpad { i8*, i32 }
+          cleanup, !dbg !9179
+  %118 = extractvalue { i8*, i32 } %116, 1, !dbg !9179
+  br label %130, !dbg !9179
+  %164 = phi i32 [ %161, %159 ], [ %106, %103 ]
+  %121 = extractvalue { i8*, i32 } %120, 0, !dbg !9179
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %85) #3, !dbg !9168
+  br label %127, !dbg !9179
+  br label %127, !dbg !9174
+  %114 = extractvalue { i8*, i32 } %112, 1, !dbg !9179
+  %161 = phi i32 [ %157, %156 ], [ %154, %152 ], [ %138, %136 ]
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %87) #3, !dbg !9168
+  %124 = landingpad { i8*, i32 }
+          cleanup, !dbg !9179
+  %117 = extractvalue { i8*, i32 } %116, 0, !dbg !9179
+  %163 = phi i8* [ %160, %159 ], [ %105, %103 ]
+  %128 = phi i8* [ %125, %123 ], [ %121, %119 ]
+  br label %162, !dbg !9180
+  %141 = extractvalue { i8*, i32 } %140, 0, !dbg !9179
+  %74 = phi i32 [ %70, %69 ], [ %48, %46 ]
+  br label %195, !dbg !9156
+  %83 = getelementptr inbounds %"class.std::allocator", %"class.std::allocator"* %11, i64 0, i32 0, !dbg !9166
+  %160 = phi i8* [ %158, %156 ], [ %153, %152 ], [ %137, %136 ]
+  %142 = extractvalue { i8*, i32 } %140, 1, !dbg !9179
+  br label %159, !dbg !9175
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %14) #3, !dbg !9174
+  %157 = phi i32 [ %142, %139 ], [ %154, %152 ]
+  br label %165, !dbg !9161
+  call void @llvm.lifetime.end.p0i8(i64 1, i8* nonnull %83) #3, !dbg !9167
+  %85 = bitcast %"class.std::basic_string"* %12 to i8*, !dbg !9168
+  %158 = phi i8* [ %141, %139 ], [ %153, %152 ]
+  %82 = bitcast %"class.std::basic_string"* %10 to i8*, !dbg !9165
+  call void @llvm.lifetime.start.p0i8(i64 1, i8* nonnull %83) #3, !dbg !9166
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %13) #3, !dbg !9174
+  %87 = bitcast %"class.std::basic_string"* %14 to i8*, !dbg !9168
+  %79 = getelementptr inbounds %"class.adept::Array", %"class.adept::Array"* %0, i64 0, i32 2, !dbg !9162
+  %154 = phi i32 [ %151, %147 ], [ %146, %143 ]
+  %86 = bitcast %"class.std::basic_string"* %13 to i8*, !dbg !9168
+  %90 = bitcast %"class.std::basic_string"* %15 to i8*, !dbg !9171
+  %155 = phi i1 [ %148, %147 ], [ true, %143 ]
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %82) #3, !dbg !9165
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %12) #3, !dbg !9174
+  %98 = bitcast %"class.std::basic_string"* %16 to i8*, !dbg !9176
+  %97 = bitcast i8* %95 to %"class.adept::size_mismatch"*, !dbg !9175
+  %153 = phi i8* [ %150, %147 ], [ %145, %143 ]
+  br label %152, !dbg !9175
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %15) #3, !dbg !9174
+  %104 = landingpad { i8*, i32 }
+          cleanup, !dbg !9179
+  %80 = call zeroext i1 @_ZN5adept8internal10compatibleILi2ELi2EEENS0_9enable_ifIXaaeqT_T0_gtT_Li1EEbE4typeERKNS_14ExpressionSizeIXT_EEERKNS5_IXT0_EEE(%"class.adept::ExpressionSize"* nonnull dereferenceable(8) %4, %"class.adept::ExpressionSize"* nonnull dereferenceable(8) %79), !dbg !9163
+  %99 = bitcast %"class.std::basic_string"* %17 to i8*, !dbg !9177
+  %148 = phi i1 [ false, %102 ], [ true, %101 ]
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %25) #3, !dbg !9156
+  br i1 %155, label %156, label %159, !dbg !9175
+  %67 = phi i32 [ %52, %49 ], [ %64, %62 ]
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %33) #3, !dbg !9150
+  %149 = landingpad { i8*, i32 }
+          cleanup, !dbg !9179
+  %4 = alloca %"class.adept::ExpressionSize", align 4
+  call void @__cxa_free_exception(i8* %95) #3, !dbg !9175
+  %68 = phi i8* [ %51, %49 ], [ %63, %62 ]
+  call void @_ZN5adept5ArrayILi2EfLb0EE6resizeERKNS_14ExpressionSizeILi2EEE(%"class.adept::Array"* %0, %"class.adept::ExpressionSize"* nonnull dereferenceable(8) %4), !dbg !9159
+  br label %156, !dbg !9175
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %16) #3, !dbg !9175
+  %144 = landingpad { i8*, i32 }
+          cleanup, !dbg !9179
+  br label %152, !dbg !9179
+  br label %69, !dbg !9150
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %17) #3, !dbg !9175
+  %138 = phi i32 [ %135, %133 ], [ %110, %107 ]
+  %70 = phi i32 [ %67, %66 ], [ %64, %62 ]
+  %150 = extractvalue { i8*, i32 } %149, 0, !dbg !9179
+  %8 = alloca %"class.std::basic_string", align 8
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %33) #3, !dbg !9150
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %34) #3, !dbg !9150
+  %71 = phi i8* [ %68, %66 ], [ %63, %62 ]
+  %10 = alloca %"class.std::basic_string", align 8
+  %9 = alloca %"class.std::basic_string", align 8
+  %140 = landingpad { i8*, i32 }
+          cleanup, !dbg !9179
+  %151 = extractvalue { i8*, i32 } %149, 1, !dbg !9179
+  br label %159, !dbg !9174
+  br label %136, !dbg !9174
+  call void @llvm.dbg.value(metadata %"class.adept::Array"* %0, metadata !66576, metadata !DIExpression()), !dbg !66593
+  %6 = alloca %"class.std::basic_string", align 8
+  %5 = alloca %"class.std::basic_string", align 8
+  %137 = phi i8* [ %134, %133 ], [ %109, %107 ]
+  br label %72, !dbg !9156
+  %7 = alloca %"class.std::basic_string", align 8
+  %73 = phi i8* [ %71, %69 ], [ %47, %46 ]
+  %145 = extractvalue { i8*, i32 } %144, 0, !dbg !9179
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %34) #3, !dbg !9150
+  call void @llvm.dbg.value(metadata %"struct.adept::Expression.42"* %1, metadata !66577, metadata !DIExpression()), !dbg !66594
+  %146 = extractvalue { i8*, i32 } %144, 1, !dbg !9179
+  %14 = alloca %"class.std::basic_string", align 8
+  %50 = landingpad { i8*, i32 }
+          cleanup, !dbg !9154
+  call void @_ZN5adept5ArrayILi2EfLb0EED2Ev(%"class.adept::Array"* nonnull %21) #3, !dbg !9200
+  invoke void @__cxa_throw(i8* %95, i8* bitcast ({ i8*, i8*, i8* }* @_ZTIN5adept13size_mismatchE to i8*), i8* bitcast (void (%"class.adept::exception"*)* @_ZN5adept9exceptionD2Ev to i8*)) #32
+          to label %200 unwind label %147, !dbg !9175
+  %13 = alloca %"class.std::basic_string", align 8
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %27) #3, !dbg !9145
+  %135 = phi i32 [ %132, %130 ], [ %114, %111 ]
+  br label %66, !dbg !9150
+  %15 = alloca %"class.std::basic_string", align 8
+  %54 = landingpad { i8*, i32 }
+          cleanup, !dbg !9154
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %34) #3, !dbg !9152
+  call void @_ZN5adept5ArrayILi2EfLb0EED2Ev(%"class.adept::Array"* nonnull %20) #3, !dbg !9201
+  br label %62, !dbg !9154
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %26) #3, !dbg !9145
+  %11 = alloca %"class.std::allocator", align 1
+  br i1 %172, label %173, label %190, !dbg !9195
+  %58 = phi i1 [ false, %37 ], [ true, %36 ]
+  br label %133, !dbg !9174
+  %134 = phi i8* [ %131, %130 ], [ %113, %111 ]
+  %12 = alloca %"class.std::basic_string", align 8
+  %59 = landingpad { i8*, i32 }
+          cleanup, !dbg !9154
+  br label %130, !dbg !9174
+  %19 = alloca float*, align 8
+  br label %62, !dbg !9150
+  %131 = phi i8* [ %128, %127 ], [ %117, %115 ]
+  call void @_ZN5adept5ArrayILi2EfLb0EEC2Ev(%"class.adept::Array"* nonnull %20), !dbg !9197
+  %63 = phi i8* [ %60, %57 ], [ %55, %53 ]
+  br i1 %166, label %194, label %167, !dbg !9182
+  invoke void @_ZN5adept8internal18exception_locationEPKci(%"class.std::basic_string"* nonnull sret %17, i8* getelementptr inbounds ([37 x i8], [37 x i8]* @.str.120, i64 0, i64 0), i32 480)
+          to label %100 unwind label %139, !dbg !9177
+  %20 = alloca %"class.adept::Array", align 8
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %27) #3, !dbg !9145
+  %132 = phi i32 [ %129, %127 ], [ %118, %115 ]
+  call void @llvm.lifetime.start.p0i8(i64 8, i8* nonnull %33) #3, !dbg !9151
+  %64 = phi i32 [ %61, %57 ], [ %56, %53 ]
+  %16 = alloca %"class.std::basic_string", align 8
+  %129 = phi i32 [ %126, %123 ], [ %122, %119 ]
+  call void @_ZNSsD2Ev(%"class.std::basic_string"* nonnull %10) #3, !dbg !9180
+  %18 = alloca float*, align 8
+  %21 = alloca %"class.adept::Array", align 8
+  invoke void @_ZStplIcSt11char_traitsIcESaIcEESbIT_T0_T1_ERKS6_OS6_(%"class.std::basic_string"* nonnull sret %16, %"class.std::basic_string"* nonnull dereferenceable(8) %10, %"class.std::basic_string"* nonnull dereferenceable(8) %17)
+          to label %101 unwind label %143, !dbg !9177
+  call void @llvm.lifetime.end.p0i8(i64 8, i8* nonnull %26) #3, !dbg !9145
+  %65 = phi i1 [ %58, %57 ], [ true, %53 ]
+  %166 = call zeroext i1 @_ZNK5adept5ArrayILi2EfLb0EE5emptyEv(%"class.adept::Array"* %0), !dbg !9181
+  %17 = alloca %"class.std::basic_string", align 8
+  %170 = load float*, float** %18, align 8, !dbg !9188, !tbaa !9189
+</end dump>
+function with differential return _ZNK5adept10ExpressionIfNS_8internal19BinaryOpScalarRightIfNS1_14UnaryOperationIfNS1_3ExpENS2_IfNS_5ArrayILi2EfLb0EEENS1_8SubtractEfEEEENS1_8MultiplyEfEEE14get_dimensionsILi2EEEbRNS_14ExpressionSizeIXT_EEE 0
+ added malloc   %5 = tail call zeroext i1 @_ZNK5adept8internal19BinaryOpScalarRightIfNS0_14UnaryOperationIfNS0_3ExpENS1_IfNS_5ArrayILi2EfLb0EEENS0_8SubtractEfEEEENS0_8MultiplyEfE15get_dimensions_ILi2EEEbRNS_14ExpressionSizeIXT_EEE(%"struct.adept::internal::BinaryOpScalarRight"* nonnull %3, %"class.adept::ExpressionSize"* nonnull dereferenceable(8) %1), !dbg !9120
+function with differential return _ZNK5adept8internal19BinaryOpScalarRightIfNS0_14UnaryOperationIfNS0_3ExpENS1_IfNS_5ArrayILi2EfLb0EEENS0_8SubtractEfEEEENS0_8MultiplyEfE15get_dimensions_ILi2EEEbRNS_14ExpressionSizeIXT_EEE 0
+ added malloc   %5 = tail call zeroext i1 @_ZNK5adept10ExpressionIfNS_8internal14UnaryOperationIfNS1_3ExpENS1_19BinaryOpScalarRightIfNS_5ArrayILi2EfLb0EEENS1_8SubtractEfEEEEE14get_dimensionsILi2EEEbRNS_14ExpressionSizeIXT_EEE(%"struct.adept::Expression.43"* %4, %"class.adept::ExpressionSize"* nonnull dereferenceable(8) %1), !dbg !9126
+function with differential return _ZNK5adept10ExpressionIfNS_8internal14UnaryOperationIfNS1_3ExpENS1_19BinaryOpScalarRightIfNS_5ArrayILi2EfLb0EEENS1_8SubtractEfEEEEE14get_dimensionsILi2EEEbRNS_14ExpressionSizeIXT_EEE 0
+ added malloc   %5 = tail call zeroext i1 @_ZNK5adept8internal14UnaryOperationIfNS0_3ExpENS0_19BinaryOpScalarRightIfNS_5ArrayILi2EfLb0EEENS0_8SubtractEfEEE15get_dimensions_ILi2EEEbRNS_14ExpressionSizeIXT_EEE(%"struct.adept::internal::UnaryOperation"* nonnull %3, %"class.adept::ExpressionSize"* nonnull dereferenceable(8) %1), !dbg !9120
+function with differential return _ZNK5adept8internal14UnaryOperationIfNS0_3ExpENS0_19BinaryOpScalarRightIfNS_5ArrayILi2EfLb0EEENS0_8SubtractEfEEE15get_dimensions_ILi2EEEbRNS_14ExpressionSizeIXT_EEE 0
+ added malloc   %5 = tail call zeroext i1 @_ZNK5adept10ExpressionIfNS_8internal19BinaryOpScalarRightIfNS_5ArrayILi2EfLb0EEENS1_8SubtractEfEEE14get_dimensionsILi2EEEbRNS_14ExpressionSizeIXT_EEE(%"struct.adept::Expression.45"* %4, %"class.adept::ExpressionSize"* nonnull dereferenceable(8) %1), !dbg !9125
+function with differential return _ZNK5adept10ExpressionIfNS_8internal19BinaryOpScalarRightIfNS_5ArrayILi2EfLb0EEENS1_8SubtractEfEEE14get_dimensionsILi2EEEbRNS_14ExpressionSizeIXT_EEE 0
+ added malloc   %5 = tail call zeroext i1 @_ZNK5adept8internal19BinaryOpScalarRightIfNS_5ArrayILi2EfLb0EEENS0_8SubtractEfE15get_dimensions_ILi2EEEbRNS_14ExpressionSizeIXT_EEE(%"struct.adept::internal::BinaryOpScalarRight.44"* nonnull %3, %"class.adept::ExpressionSize"* nonnull dereferenceable(8) %1), !dbg !9120
+function with differential return _ZNK5adept8internal19BinaryOpScalarRightIfNS_5ArrayILi2EfLb0EEENS0_8SubtractEfE15get_dimensions_ILi2EEEbRNS_14ExpressionSizeIXT_EEE 0
+ added malloc   %5 = tail call zeroext i1 @_ZNK5adept10ExpressionIfNS_5ArrayILi2EfLb0EEEE14get_dimensionsILi2EEEbRNS_14ExpressionSizeIXT_EEE(%"struct.adept::Expression.11"* %4, %"class.adept::ExpressionSize"* nonnull dereferenceable(8) %1), !dbg !9126
+function with differential return _ZNK5adept10ExpressionIfNS_5ArrayILi2EfLb0EEEE14get_dimensionsILi2EEEbRNS_14ExpressionSizeIXT_EEE 0
+ added malloc   %5 = tail call zeroext i1 @_ZNK5adept5ArrayILi2EfLb0EE15get_dimensions_ERNS_14ExpressionSizeILi2EEE(%"class.adept::Array"* nonnull %3, %"class.adept::ExpressionSize"* nonnull dereferenceable(8) %1), !dbg !9120
+function with differential return _ZNK5adept5ArrayILi2EfLb0EE15get_dimensions_ERNS_14ExpressionSizeILi2EEE 0
+ consider val   %6 = load i64, i64* %4, align 4, !dbg !9116, !tbaa !9117 for v   %5 = bitcast %"class.adept::ExpressionSize"* %1 to i64*, !dbg !9116
+ for val %"class.adept::ExpressionSize"* %1i32
+ consider val   %6 = load i64, i64* %4, align 4, !dbg !9116, !tbaa !9117 for v   %4 = bitcast %"class.adept::ExpressionSize"* %3 to i64*, !dbg !9116
+ for val %"class.adept::Array"* %0float*
+a op value:   %6 = load i64, i64* %4, align 4, !dbg !9116, !tbaa !9117
+a op pointer:   %5 = bitcast %"class.adept::ExpressionSize"* %1 to i64*, !dbg !9116
+Wrong types for attribute: byval inalloca nest noalias nocapture nonnull readnone readonly signext sret zeroext dereferenceable(1) dereferenceable_or_null(1)
+{ i8*, i1, i1 } (%"class.adept::Array"*, %"class.adept::Array"*, %"class.adept::ExpressionSize"*, %"class.adept::ExpressionSize"*)* @fakeaugmented__ZNK5adept5ArrayILi2EfLb0EE15get_dimensions_ERNS_14ExpressionSizeILi2EEE
+
+; Function Attrs: nounwind uwtable
+define internal zeroext { i8*, i1, i1 } @fakeaugmented__ZNK5adept5ArrayILi2EfLb0EE15get_dimensions_ERNS_14ExpressionSizeILi2EEE(%"class.adept::Array"*, %"class.adept::Array"* %"'", %"class.adept::ExpressionSize"* dereferenceable(8), %"class.adept::ExpressionSize"* %"'1") local_unnamed_addr #4 align 2 !dbg !66796 {
+  call void @llvm.dbg.value(metadata %"class.adept::Array"* %0, metadata !66798, metadata !DIExpression()), !dbg !66800
+  call void @llvm.dbg.value(metadata %"class.adept::ExpressionSize"* %1, metadata !66799, metadata !DIExpression()), !dbg !66801
+  %"'ipge" = getelementptr %"class.adept::Array", %"class.adept::Array"* %"'", i64 0, i32 2, !dbg !66802
+  %3 = getelementptr inbounds %"class.adept::Array", %"class.adept::Array"* %0, i64 0, i32 2, !dbg !66802
+  %4 = bitcast %"class.adept::ExpressionSize"* %3 to i64*, !dbg !66803
+  %5 = bitcast %"class.adept::ExpressionSize"* %1 to i64*, !dbg !66803
+  %"'ipc" = bitcast %"class.adept::ExpressionSize"* %"'ipge" to i64*, !dbg !66803
+  %"'ipl" = load i64, i64* %"'ipc", align 4, !dbg !66803
+  %6 = load i64, i64* %4, align 4, !dbg !66803, !tbaa !9237
+  %"'ipc2" = bitcast %"class.adept::ExpressionSize"* %"'1" to i64*, !dbg !66803
+  store i64 %"'ipl", i64* %"'ipc2", !dbg !66803
+  store i64 %6, i64* %5, align 4, !dbg !66803, !tbaa !9237
+  ret { i8*, i1, i1 } { i8* undef, i1 true, i1 undef }, !dbg !66804
+}
+
+LLVM ERROR: function failed verification
+make: *** [GCN] Error 1
