@@ -563,8 +563,8 @@ void Compute(graph<vertex>& GA, commandLine P) {
   }
 
   // parse the data from the graph.
-  parse_pubmed_data("pubmed.trainlabels", "pubmed.vallabels",
-                    "pubmed.testlabels", "pubmed_features", is_train,
+  parse_pubmed_data("datasets/pubmed.trainlabels", "datasets/pubmed.vallabels",
+                    "datasets/pubmed.testlabels", "datasets/pubmed_features", is_train,
                     is_val, is_test, groundtruth_labels,
                     feature_vectors);
 
@@ -636,11 +636,11 @@ void Compute(graph<vertex>& GA, commandLine P) {
 
       vertexMap(Frontier, GCN_applyweights_F<vertex>(Parents, GA, weights, pre_embedding_list[i],
                                         prev_vertex_embeddings));
-      //vertexMap(Frontier, GCN_F<vertex>(Parents, GA, weights, skip_weights, next_vertex_embeddings,
-      //                                  pre_embedding_list[i], prev_vertex_embeddings, first));
-
-      edgeMap(GA, Frontier, GCN_edgeMap_F<vertex>(Parents, GA, weights, skip_weights, next_vertex_embeddings,
+      vertexMap(Frontier, GCN_F<vertex>(Parents, GA, weights, skip_weights, next_vertex_embeddings,
                                         pre_embedding_list[i], prev_vertex_embeddings, first));
+
+      //edgeMap(GA, Frontier, GCN_edgeMap_F<vertex>(Parents, GA, weights, skip_weights, next_vertex_embeddings,
+      //                                  pre_embedding_list[i], prev_vertex_embeddings, first));
     }
 
     MatrixXf* final_vertex_embeddings = new MatrixXf[GA.n];
@@ -739,18 +739,18 @@ void Compute(graph<vertex>& GA, commandLine P) {
 
       ArrayReducer reducer;
 
-      //vertexMap(Frontier, d_GCN_F<vertex>(Parents, GA, weights, d_weights,
-      //                                    skip_weights, d_skip_weights,
-      //                                    next_vertex_embeddings, d_next_vertex_embeddings,
-      //                                    pre_embedding_list[i], d_pre_embedding_list[i],
-      //                                    prev_vertex_embeddings, d_prev_vertex_embeddings,
-      //                                    &reducer, first));
-      edgeMap(GA, Frontier, d_GCN_edgeMap_F<vertex>(Parents, GA, weights, d_weights,
+      vertexMap(Frontier, d_GCN_F<vertex>(Parents, GA, weights, d_weights,
                                           skip_weights, d_skip_weights,
                                           next_vertex_embeddings, d_next_vertex_embeddings,
                                           pre_embedding_list[i], d_pre_embedding_list[i],
                                           prev_vertex_embeddings, d_prev_vertex_embeddings,
-                                          &reducer, first), remove_duplicates);
+                                          &reducer, first));
+      //edgeMap(GA, Frontier, d_GCN_edgeMap_F<vertex>(Parents, GA, weights, d_weights,
+      //                                    skip_weights, d_skip_weights,
+      //                                    next_vertex_embeddings, d_next_vertex_embeddings,
+      //                                    pre_embedding_list[i], d_pre_embedding_list[i],
+      //                                    prev_vertex_embeddings, d_prev_vertex_embeddings,
+      //                                    &reducer, first), remove_duplicates);
 
       reducer.combine();
       {

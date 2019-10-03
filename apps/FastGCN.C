@@ -228,6 +228,48 @@ struct d_GCN_applyweights_F {
 };
 
 
+template <class vertex>
+struct GCN_sampling_edgeMap {
+
+  graph<vertex>& GA;
+
+  bool* Parents;
+  bool first;
+  GCN_sampling_edgeMap(bool* _Parents, graph<vertex>& _GA) :
+                                          Parents(_Parents), GA(_GA) {}
+
+  inline bool update(uintE n, uintE v) {
+    return updateAtomic(n,v);
+  }
+
+  inline bool _update(uintE n, uintE v) {
+    int in_degree = GA.V[v].getOutDegree();
+    double edge_weight = 1.0 / sqrt(in_degree * GA.V[n].getOutDegree());
+
+    bool r = (rand()%10000) / 10000.0 < edge_weight;
+    bool ret = r || Parents[v];
+    Parents[v] = true;
+    return ret;
+    //return rand;
+  }
+
+  inline bool updateAtomic(uintE n, uintE v) {
+    ////printf("update atomic\n");
+    //while (!__sync_bool_compare_and_swap(&Parents[v], UINT_E_MAX, 0)) {
+    //  //if (Parents[d] == 0) break;
+    //  continue;
+    //}
+    bool ret = _update(n,v);
+    //__sync_bool_compare_and_swap(&Parents[v], 0, UINT_E_MAX);
+    return ret;//update(v,n);
+  }
+
+  inline bool cond(uintE n) {
+    return cond_true(n);
+  }
+};
+
+
 
 template <class vertex>
 struct GCN_edgeMap_F {
@@ -235,6 +277,7 @@ struct GCN_edgeMap_F {
   graph<vertex>& GA;
 
   uintE* Parents;
+  bool* vIndices;
   MatrixXf& weights;
   MatrixXf& skip_weights;
   MatrixXf* next_vertex_embeddings;
@@ -242,9 +285,10 @@ struct GCN_edgeMap_F {
   MatrixXf* prevprev_vertex_embeddings;
 
   bool first;
-  GCN_edgeMap_F(uintE* _Parents, graph<vertex>& _GA,
+  GCN_edgeMap_F(bool* _vIndices, uintE* _Parents, graph<vertex>& _GA,
         MatrixXf& _weights, MatrixXf& _skip_weights, MatrixXf* _next_vertex_embeddings,
         MatrixXf* _prev_vertex_embeddings, MatrixXf* _prevprev_vertex_embeddings, bool _first) :
+                                          vIndices(_vIndices),
                                           Parents(_Parents), GA(_GA), weights(_weights),
                                           skip_weights(_skip_weights),
                                           next_vertex_embeddings(_next_vertex_embeddings),
@@ -301,7 +345,8 @@ struct GCN_edgeMap_F {
   }
 
   inline bool cond(uintE n) {
-    return cond_true(n);
+    return vIndices[n];
+    //return cond_true(n);
   }
 };
 
@@ -311,6 +356,7 @@ struct d_GCN_edgeMap_F {
   graph<vertex>& GA;
 
   uintE* Parents;
+  bool* vIndices;
 
   MatrixXf& weights;
   MatrixXf& skip_weights;
@@ -329,14 +375,14 @@ struct d_GCN_edgeMap_F {
 
   ArrayReducer* reducer;
 
-  d_GCN_edgeMap_F(uintE* _Parents, graph<vertex>& _GA,
+  d_GCN_edgeMap_F(bool* _vIndices, uintE* _Parents, graph<vertex>& _GA,
         MatrixXf& _weights, MatrixXf* _d_weights,
         MatrixXf& _skip_weights, MatrixXf* _d_skip_weights,
         MatrixXf* _next_vertex_embeddings, MatrixXf* _d_next_vertex_embeddings,
         MatrixXf* _prev_vertex_embeddings, MatrixXf* _d_prev_vertex_embeddings,
         MatrixXf* _prevprev_vertex_embeddings, MatrixXf* _d_prevprev_vertex_embeddings,
         ArrayReducer* _reducer, bool _first) :
-            Parents(_Parents), GA(_GA), weights(_weights), d_weights(_d_weights),
+            vIndices(_vIndices), Parents(_Parents), GA(_GA), weights(_weights), d_weights(_d_weights),
             skip_weights(_skip_weights), d_skip_weights(_d_skip_weights),
             next_vertex_embeddings(_next_vertex_embeddings),
             d_next_vertex_embeddings(_d_next_vertex_embeddings),
@@ -396,7 +442,8 @@ struct d_GCN_edgeMap_F {
   }
 
   inline bool cond(uintE n) {
-    return cond_true(n);
+    return vIndices[n];
+    //return cond_true(n);
   }
 
 
@@ -541,7 +588,7 @@ struct d_GCN_F {
     // reverse of matrix multiplies.
     for (int i = 0; i < in_degree; i++) {
       uintE n = neighbors[i];
-      double edge_weight = 1.0/sqrt(in_degree * GA.V[n].getOutDegree());
+      double edge_weight = 1.0;///sqrt(in_degree * GA.V[n].getOutDegree());
 
       MatrixXf& d_prev_vertex_embeddings_n = *(view->get_view(&(d_prev_vertex_embeddings[n])));
       // propagate to d_prev_vertex_embeddings[n]
@@ -587,8 +634,8 @@ void Compute(graph<vertex>& GA, commandLine P) {
   }
 
   // parse the data from the graph.
-  parse_pubmed_data("pubmed.trainlabels", "pubmed.vallabels",
-                    "pubmed.testlabels", "pubmed_features", is_train,
+  parse_pubmed_data("datasets/pubmed.trainlabels", "datasets/pubmed.vallabels",
+                    "datasets/pubmed.testlabels", "datasets/pubmed_features", is_train,
                     is_val, is_test, groundtruth_labels,
                     feature_vectors);
 
@@ -627,12 +674,39 @@ void Compute(graph<vertex>& GA, commandLine P) {
     random_init(generator, layer_skip_weights[i]);
   }
 
-  for (int64_t i = 0; i < GA.n; i++) {
-    vIndices[i] = true;
-  }
-  vertexSubset Frontier(n, n, vIndices); //creates initial frontier
+  for (int iter = 0; iter < 3000; iter++) {
 
-  for (int iter = 0; iter < 300; iter++) {
+
+    for (int64_t i = 0; i < GA.n; i++) {
+      vIndices[i] = false;
+    }
+
+
+    std::uniform_int_distribution<int> dist(0,GA.n-1);
+    bool* batch_training_set = static_cast<bool*>(calloc(GA.n, sizeof(bool)));
+    bool no_update = false;
+    if (iter > 0 && iter % 100 == 0) {
+      no_update = true;
+      for (int i = 0; i < GA.n; i++) {
+        batch_training_set[i] = true;
+        vIndices[i] = true;
+      }
+    } else {
+      for (int i = 0; i < 100; i++) {
+        int id =  dist(generator);
+        vIndices[id] = true;
+        batch_training_set[id] = true;
+      }
+    }
+
+    vertexSubset Frontier(n, batch_training_set); //creates initial frontier
+
+
+    for (int i = 0; i < 3; i++) {
+      Frontier = edgeMap<vertex>(GA, Frontier, GCN_sampling_edgeMap<vertex>(vIndices, GA));
+    }
+
+
     std::vector<MatrixXf*> embedding_list, d_embedding_list, pre_embedding_list, d_pre_embedding_list;
     embedding_list.push_back(&(feature_vectors[0]));
     for (int i = 0; i < gcn_embedding_dimensions.size(); i++) {
@@ -658,6 +732,14 @@ void Compute(graph<vertex>& GA, commandLine P) {
       }
       bool first = (i == embedding_list.size()-2);
 
+      // create a batch.
+      //std::vector>
+      //for () {
+
+      //}
+
+
+
       vertexMap(Frontier, GCN_applyweights_F<vertex>(Parents, GA, weights, pre_embedding_list[i],
                                         prev_vertex_embeddings));
       //vertexMap(Frontier, GCN_F<vertex>(Parents, GA, weights, skip_weights, next_vertex_embeddings,
@@ -666,7 +748,7 @@ void Compute(graph<vertex>& GA, commandLine P) {
       //if (!first) {
       //}
 
-      edgeMap(GA, Frontier, GCN_edgeMap_F<vertex>(Parents, GA, weights, skip_weights, next_vertex_embeddings,
+      edgeMap(GA, Frontier, GCN_edgeMap_F<vertex>(vIndices, Parents, GA, weights, skip_weights, next_vertex_embeddings,
                                         pre_embedding_list[i], prev_vertex_embeddings, first), remove_duplicates);
       if (!first) {
         vertexMap(Frontier, GCN_vertexRELU_F<vertex>(Parents, GA, weights,
@@ -694,7 +776,8 @@ void Compute(graph<vertex>& GA, commandLine P) {
     reducer_opadd<int> total_val_reducer(total_val);
 
     parallel_for (int i = 0; i < GA.n; i++) {
-      if (!is_train[i]) {
+      if (!is_train[i] && vIndices[i] /*batch_training_set[i]*/ && no_update) {
+        //continue;
         losses[i] = 0.0;
         if (is_val[i]) continue;
         crossentropy(final_vertex_embeddings[i], groundtruth_labels[i], losses[i]);
@@ -713,10 +796,11 @@ void Compute(graph<vertex>& GA, commandLine P) {
         }
         *total_val_reducer += 1;
         continue;
+      } else if (batch_training_set[i] && is_train[i]) {
+        *batch_size_reducer += 1;
+        crossentropy(final_vertex_embeddings[i], groundtruth_labels[i], losses[i]);
+        *total_loss_reducer += losses[i];
       }
-      *batch_size_reducer += 1;
-      crossentropy(final_vertex_embeddings[i], groundtruth_labels[i], losses[i]);
-      *total_loss_reducer += losses[i];
     }
     total_loss = total_loss_reducer.get_value();
     batch_size = batch_size_reducer.get_value();
@@ -730,7 +814,7 @@ void Compute(graph<vertex>& GA, commandLine P) {
     MatrixXf* d_final_vertex_embeddings = new MatrixXf[GA.n];
     parallel_for (int i = 0; i < GA.n; i++) {
       double d_loss = 1.0/batch_size;
-      if (!is_train[i]) d_loss = 0.0;
+      if (!is_train[i] || !batch_training_set[i]) d_loss = 0.0;
       d_final_vertex_embeddings[i] = MatrixXf(final_vertex_embeddings[i].rows(),
                                               final_vertex_embeddings[i].cols());
       zero_init(d_final_vertex_embeddings[i]);
@@ -783,7 +867,7 @@ void Compute(graph<vertex>& GA, commandLine P) {
       //                                    prev_vertex_embeddings, d_prev_vertex_embeddings,
       //                                    &reducer, first));
 
-      edgeMap(GA, Frontier, d_GCN_edgeMap_F<vertex>(Parents, GA, weights, d_weights,
+      edgeMap(GA, Frontier, d_GCN_edgeMap_F<vertex>(vIndices, Parents, GA, weights, d_weights,
                                           skip_weights, d_skip_weights,
                                           next_vertex_embeddings, d_next_vertex_embeddings,
                                           pre_embedding_list[i], d_pre_embedding_list[i],
@@ -823,13 +907,13 @@ void Compute(graph<vertex>& GA, commandLine P) {
       delete view->get_view(d_weights);
       delete view->get_view(d_skip_weights);
     }
-
-    apply_gradient_update_ADAM(layer_weights, d_layer_weights, layer_weights_velocity,
-                               layer_weights_momentum, 1.0, learning_rate, iter+1);
-    apply_gradient_update_ADAM(layer_skip_weights, d_layer_skip_weights,
-                               layer_skip_weights_velocity, layer_skip_weights_momentum, 1.0,
-                               learning_rate, iter+1);
-
+    if (!no_update) {
+      apply_gradient_update_ADAM(layer_weights, d_layer_weights, layer_weights_velocity,
+                                 layer_weights_momentum, 1.0, learning_rate, iter+1);
+      apply_gradient_update_ADAM(layer_skip_weights, d_layer_skip_weights,
+                                 layer_skip_weights_velocity, layer_skip_weights_momentum, 1.0,
+                                 learning_rate, iter+1);
+    }
     for (int i = 0; i < embedding_list.size(); i++) {
       if (i > 0) delete[] embedding_list[i];
 
@@ -842,7 +926,7 @@ void Compute(graph<vertex>& GA, commandLine P) {
     delete[] losses;
     delete[] d_final_vertex_embeddings;
   }
-  Frontier.del();
+  //Frontier.del();
 
   free(is_train);
   free(is_val);
